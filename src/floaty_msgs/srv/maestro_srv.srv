@@ -1,0 +1,3 @@
+int32[] speeds # a list of motors' speeds 
+---
+int32 ok # 1 if the request recieved and processed

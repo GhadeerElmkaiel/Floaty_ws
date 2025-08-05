@@ -1,0 +1,10 @@
+# geometry_msgs/Pose pose # position and orientation of Floaty 
+float32 x   # Position x
+float32 y   # Position y
+float32 z   # Position z
+float32 qw  # Orientation w
+float32 qx  # Orientation x
+float32 qy  # Orientation y
+float32 qz  # Orientation z
+---
+int32 ok # Bool that the request recieved

@@ -1,0 +1,4 @@
+int32 data_to_record # number of data points to record
+string file_name # The path to the data file
+---
+int32 ok # Bool that the request recieved

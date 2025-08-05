@@ -1,0 +1,10 @@
+NatNet: {
+  data_topic: "/Optitrack/Floaty",
+  # data_topic: "/Optitrack/rigidbody",
+  default_rate: 200,
+}
+
+TF: {
+  base_frame: "/map",
+  trans_frame: "/sensor",
+}

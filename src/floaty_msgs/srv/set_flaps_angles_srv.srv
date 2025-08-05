@@ -1,0 +1,3 @@
+float32[] angles # the angles of the 4 flaps 
+---
+int32 ok # Bool that the request recieved

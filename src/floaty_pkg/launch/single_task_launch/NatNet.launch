@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+
+	<!-- Node that read Optitrack data and publishs it over ROS --> 
+	<group ns="NatNet">
+		<node name="NatNet_node" pkg="floaty_pkg" type="NatNet_node" 
+						required="true" output="screen"/>
+	</group>
+
+
+</launch>

@@ -1,0 +1,6 @@
+ft_sensor: {
+  frame_id: "sensor",
+  data_to_record: 100,
+  record_duration: 0.0025,
+  use_ati_data_directly: True,  # This means that the recording happens immediately when it recieves the topic and not by timer
+}

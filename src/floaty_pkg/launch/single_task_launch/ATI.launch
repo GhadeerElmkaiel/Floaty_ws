@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+	
+	<!-- Reading the ATI sensor data via ROS -->
+	<include file="$(find netft_rdt_driver)/launch/ft_sensor.launch">
+	</include>
+
+</launch>

@@ -1,0 +1,28 @@
+gp_process: {
+  gp_mesh_radius: 0.2,
+  gp_mesh_gap: 0.02,
+  motors_speed_update_rate: 1.2,
+  gp_uniform_value: 2.5,
+  # gp_uniform_value: 0.85,
+  motors_gaussian_sigma: 0.07, # 0.2 is the value that best fit the single motor experiments 0.15,
+  motors_exp_multiplier: 1.2, # (1.52) this is the average value for both top and bottom motors
+  max_motor_speed: 60,
+  error_function: "uniform", # step, atan, linear, uniform, Gaussian
+  kernel_l: 0.09, # Best value for Gaussian is 0.09 while best value for Exp is 0.075
+  kernel_function: "Gaussian",
+  save_data_to_json: True,
+  # pth_to_json: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/json/",
+  # json_file_name: "iter_0.json",
+  pth_to_json: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/iter_0.json",
+  data_to_use: "uniform", # "uniform", # can be either "uniform", "random", or "all"  ("all")
+  num_of_data_to_use: 150, # Only used when the using random data
+  uniform_mesh_radius: 0.3,     # Only used when the using uniform data
+  uniform_mesh_gap: 0.03,        # Only used when the using uniform data
+} 
+
+iterative_learning: {
+  max_number_of_iterations: 9,
+  update_rate_decay: 0.9, # Or alpha. It is used as following original_update_rate/(1+alpha*i)
+  exp_num_file: "exp_num.txt",
+  pth_to_data: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/",
+}

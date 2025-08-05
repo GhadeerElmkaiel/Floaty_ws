@@ -1,0 +1,6 @@
+
+floaty: {
+  flaps_range: 120,
+  # default_angles: [95, 25, 95, 25],
+  default_angles: [60, 60, 60, 60],
+}

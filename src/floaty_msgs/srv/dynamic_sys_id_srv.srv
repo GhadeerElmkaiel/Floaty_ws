@@ -1,0 +1,5 @@
+int32 number_of_periods # The number of measurement 10 seconds periods to record
+float32[] default_angles # the default angles of the flaps
+float32[] motors_to_move # a list of motors to move simultaneously 
+---
+int32 ok # 1 if the request recieved and processed

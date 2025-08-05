@@ -1,0 +1,6 @@
+int32 num_of_points # The number of points per swep
+int32 motor_id # The motor id which speed is changeed
+float32 speed_step_change # The change in speed per step
+float32[] speeds # a list of motors' initial speeds 
+---
+int32 ok # 1 if the request recieved and processed

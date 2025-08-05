@@ -1,0 +1,164 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import os
+
+current_file_dir = os.path.dirname(os.path.realpath(__file__))
+data_file_dir = current_file_dir +"/../../data/floaty_estimator/"
+
+# data_file_names = ["floaty_data_89.csv", "floaty_data_90.csv", "floaty_data_91.csv", "floaty_data_92.csv"]
+
+# data_file_names = ["floaty_data_92.csv"]
+# No controller
+# data_file_names = ["floaty_data_90.csv", 
+#                    "floaty_data_91.csv", 
+#                    "floaty_data_92.csv", 
+#                    "floaty_data_93.csv", 
+#                    "floaty_data_94.csv", 
+#                    "floaty_data_95.csv"]
+
+# With controller
+# data_file_names = ["floaty_data_96.csv", 
+#                    "floaty_data_97.csv", 
+#                    "floaty_data_98.csv"]
+
+data_file_names = ["floaty_data_450.csv"]
+
+
+
+# all_data = np.array([[0,0,0,0,0,0]])
+# for folder_dir in folders_dir:
+
+
+# This function is to apply a /------\ shaped window so the FFT transform is better as without it
+# The transform assumes that it is repeating and it will have high jumps which leads to high freqs
+def apply_window(data, ramp_len):
+    for i in range(ramp_len):
+        multiplier = i/ramp_len
+        data[i] = data[i]*multiplier
+        data[-1-i] = data[-1-i]*multiplier
+    return data
+
+
+# Here a list of lists that includes the start and end points of each data segment that I want to use
+# The data segments are chosen when the robot was to some extent flying (the teather was not tense)
+
+# floaty_data_82.csv
+# files_windows_to_read = [[[750, 800],  [1350, 1400], [1400, 1450]]]
+
+
+# No controller
+# files_windows_to_read = [[[2000, 2250]], # [325, 575], 
+#                          [[425, 675]],
+#                          [[2000, 2250], [1175, 1425]],
+#                          [[400,  650],  [2250, 2500], [2500, 2750]],
+#                          [[2425, 2675]],
+#                          [[850 , 1100], [2600, 2850], [3000, 3250]]]
+
+# With controller
+# files_windows_to_read = [[[500 , 750] , [750 , 1000], [1500, 1750], [1750, 2000], [2000, 2250], [2250, 2500]], # [325, 575], 
+#                          [[500 , 750] , [750 , 1000], [2500, 2750], [2750, 3000]],
+#                          [[350 , 600] , [2350, 2600]]]
+
+
+# # 96 - 97 - 98
+# files_windows_to_read = [[[500 , 1000], [1500, 2000], [2000, 2500]], # [325, 575], 
+#                          [[500 , 1000], [2500, 3000]],
+#                          [[350 , 850] , [2250, 2750]]]
+
+files_windows_to_read = [[[800 , 1000], [1000, 1200], [1150, 1350], [1300, 1500]]]
+
+
+# The data sampling frequency
+max_freq = 50
+data_file_header = "idx	est_x	est_y	est_z	est_vx	est_vy	est_vz	est_roll	est_pitch	est_yaw	est_roll_rate	est_pitch_rate	est_yaw_rate	est_f1	est_f2	est_f3	est_f4	Optitrack_x	Optitrack_y	Optitrack_z	roll	pitch	yaw	gyro_x	gyro_y	gyro_z	command_m1	command_m2	command_m3	command_m4	control_f1	control_f2	control_f3	control_f4"
+data_file_columns = data_file_header.split("	")
+Max_freq_to_use = 6
+
+columns_ids = {}
+for i in range(len(data_file_columns)):
+    columns_ids[data_file_columns[i]] = i
+
+
+used_columns = ["est_vy", "roll", "est_roll_rate"]
+used_colors = ["red", "blue", "green"]
+# used_columns = ["roll"]
+# used_colors = ["blue"]
+
+amplitudes = {}
+real_vals = {}
+imag_vals = {}
+A_vals = {}
+for column in used_columns:
+    amplitudes[column] = np.array([[]])
+    real_vals[column] = np.array([[]])
+    imag_vals[column] = np.array([[]])
+    A_vals[column] = np.array([])
+
+y_vals = np.array([])
+y_real_vals = np.array([])
+y_imag_vals = np.array([])
+
+fig = plt.figure()
+
+for file_num, data_file_name in enumerate(data_file_names):
+    df = pd.read_csv(data_file_dir + data_file_name, header=None)
+    np_arr = df.to_numpy()
+    windows_to_read = files_windows_to_read[file_num]
+
+    for window in windows_to_read:
+        window_start = window[0]
+        window_end = window[1]
+        window_size = window_end-window_start
+        freqs = np.fft.fftfreq(window_size)*max_freq
+
+        # low_freqs = [freq for freq in freqs if freq<Max_freq_to_use and freq>=0]
+        
+        for iter, column in enumerate(used_columns):
+            idx = columns_ids[column]
+            data = np.array([float(x) for x in np_arr[window_start:window_end, idx]])
+            data_with_win = apply_window(data, 3)
+            fft_res = np.fft.fft(data_with_win)/len(data_with_win)
+
+            reals = np.real(fft_res)
+            imags = np.imag(fft_res)
+
+            amps = np.abs(fft_res)
+            angs = [np.angle(f) if (abs(amps[i])>0.0001) else 0 for (i,f) in enumerate(fft_res)]
+            # if window_num ==0:
+            if amplitudes[column].size == 0:
+                amplitudes[column] = np.array([amps])
+                real_vals[column] = np.array(reals[1:Max_freq_to_use])
+                imag_vals[column] = np.array(imags[1:Max_freq_to_use])
+            else:
+                amplitudes[column] = np.vstack([amplitudes[column], amps])
+                real_vals[column] = np.vstack([real_vals[column], reals[1:Max_freq_to_use]])
+                imag_vals[column] = np.vstack([imag_vals[column], imags[1:Max_freq_to_use]])
+
+            A_vals[column] = np.append(A_vals[column] , amps[1:Max_freq_to_use])
+            if "rate" in column:
+                y_vals = np.append(y_vals, np.array(amps[1:Max_freq_to_use]*freqs[1:Max_freq_to_use]))
+                # jw = j*2pi*f
+                jw_freqs = freqs*complex(0,2*np.pi)
+                jw_rates = fft_res*jw_freqs
+                y_real_vals = np.append(y_real_vals, np.real(jw_rates[1:Max_freq_to_use]))
+                y_imag_vals = np.append(y_imag_vals, np.imag(jw_rates[1:Max_freq_to_use]))
+            # plt.plot(freqs, amps[1:window_size//2])
+            plt.plot(freqs[1:window_size//2], amps[1:window_size//2], color=used_colors[iter])
+            plt.show()
+    # fig = plt.figure()
+
+    # data = np_arr[]
+
+avg_amplitudes = {}
+avg_reals = {}
+avg_imags = {}
+for iter, column in enumerate(used_columns):
+    avg_amplitudes[column] = np.average(amplitudes[column], axis=0)
+    avg_reals[column] = np.average(real_vals[column], axis=0)
+    avg_imags[column] = np.average(imag_vals[column], axis=0)
+    plt.plot(freqs[1:window_size//2], avg_amplitudes[column][1:window_size//2], color=used_colors[iter], linestyle='dashed')
+    plt.show()
+
+
+print("done")

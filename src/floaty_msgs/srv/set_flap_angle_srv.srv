@@ -1,0 +1,4 @@
+int8 flap_id # the id of the flap to move 
+float32 angle # the angle of the motor 
+---
+int32 ok # Bool that the request recieved

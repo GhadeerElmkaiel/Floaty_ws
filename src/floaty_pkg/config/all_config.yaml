@@ -1,0 +1,101 @@
+# --------------------------------
+# Crazy radio configs
+# --------------------------------
+crazyradio: {
+  radio_uri: "radio://0/80/2M/E7E7E7E7E7",
+  send_position_srv_name: "send_position",
+  set_parameters_value_srv_name : "set_parameters_value",
+  floaty_info_publish_topic_name : "floaty_info",
+  floaty_flexible_info_publish_topic_name : "flexible_floaty_info",
+  flexible_msg_data_title : "floaty_data_msg",
+  max_points_to_record : 20000,
+}
+
+# --------------------------------
+# Floaty configs
+# --------------------------------
+
+floaty: {
+  flaps_range: 120,
+  # default_angles: [95, 25, 95, 25],
+  default_angles: [60, 60, 60, 60],
+}
+
+# --------------------------------
+# Loadcell configs
+# --------------------------------
+
+ft_sensor: {
+  # frame_id: "sensor", # Don't use, and replace by "/TF/trans_frame"
+  data_to_record: 100,
+  record_duration: 0.0025,
+  use_ati_data_directly: False,  # This means that the recording happens immediately when it recieves the topic and not by timer
+  rate: 1000,
+  pub_topic: "netft_data",
+}
+
+# --------------------------------
+# Maestro configs
+# --------------------------------
+
+maestro_control: {
+  number_of_motors: 7,
+  ramp_speed_divisions: 4,
+  ramp_time: 1.2,
+  windy_stop_speed: 4000,
+  windy_motor_speed: 6000,
+  max_motor_speed: 7200,
+}
+
+# --------------------------------
+# Optitrack configs
+# --------------------------------
+
+NatNet: {
+  data_topic: "/Optitrack/Floaty",
+  # data_topic: "/Optitrack/rigidbody",
+  default_rate: 200,
+}
+
+TF: {
+  base_frame: "/map",
+  trans_frame: "/sensor",
+}
+
+# --------------------------------
+# Recorder configs
+# --------------------------------
+
+vrpn_recorder: {
+  data_topic: "/vrpn_client_node/robot/pose",
+  data_to_record: 100,
+  record_duration: 0.0025,
+  vrpn_rate: 60,
+  use_data_directly: True,  # This means that the recording happens immediately when it recieves the topic and not by timer
+  # data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/dynamic_system_identification/current_experiment/",
+}
+
+topic_recorder: {
+  data_topic: "/Optitrack/Floaty",
+  record_duration: 0.0025,
+  use_data_directly: True,  # This means that the recording happens immediately when it recieves the topic and not by timer
+  # data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/dynamic_system_identification/current_experiment/",
+}
+
+ATI_recorder: {
+  data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/static_system_identification/current_experiment/",
+}
+
+# Record symultanuously ATI + Optitrack data
+data_recorder: {
+  record_period: 0.02,
+  # data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/",
+  use_median_value_for_ATI: True,
+  num_of_values_to_use_for_ATI: 5,
+}
+
+# Record symultanuously ATI + Optitrack data
+floaty_info_recorder: {
+  data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/",
+  data_file_base_name: "floaty_data",
+}

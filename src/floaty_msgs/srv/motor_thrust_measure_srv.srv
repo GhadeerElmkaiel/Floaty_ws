@@ -1,0 +1,7 @@
+int32 motor_id # the id of the motor to test 
+int32 start_speed # The beginning of the speed test range. persent from 0 to 100
+int32 end_speed # The end of the speed test range. persent from 0 to 100
+int32 increment # The increment between two speeds
+int32 measurments_per_speed # The number of samples per speed
+---
+int32 ok # Bool that the request recieved

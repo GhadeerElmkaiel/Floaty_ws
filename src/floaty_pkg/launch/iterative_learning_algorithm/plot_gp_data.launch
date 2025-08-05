@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+
+	<rosparam file="$(find floaty_pkg)/config/online_learning_algorithm_config.yaml"/>
+	<arg  name="gp_mesh_radius" default="0.2" doc="Radius of the circle over which we want to uniform the airflow"/>
+	<arg  name="gp_mesh_gap" default="0.02" doc="The distance between two points in the GP mesh"/>
+	<arg  name="motors_speed_update_rate" default="1" doc="The update rate for the motors speeds 'LASS THAN 2'"/>
+	<arg  name="motors_speed_update_rate_decay" default="0.85" doc="The value of the update rate decay'"/>
+	<arg  name="gp_uniform_value" default="0.6" doc="The value of the force over the uniform field"/>
+	<arg  name="motors_gaussian_sigma" default="0.15" doc="The Sigma for the motors gaussian distribution"/>
+	<arg  name="max_number_of_iterations" default="8" doc="The number of iterations in the algorithm"/>
+	<arg  name="error_function" default="uniform" doc="The function to calculate the error, ite defines the distribution"/>
+
+	<!-- Node that runs a service to update the motors speeds to uniform the airflow --> 
+	<group ns="gp_process">
+		<param name="gp_mesh_radius" type="double" value="$(arg gp_mesh_radius)"/>
+		<param name="gp_mesh_gap" type="double" value="$(arg gp_mesh_gap)"/>
+		<param name="motors_speed_update_rate" type="double" value="$(arg motors_speed_update_rate)"/>
+		<param name="gp_uniform_value" type="double" value="$(arg gp_uniform_value)"/>
+		<param name="motors_gaussian_sigma" type="double" value="$(arg motors_gaussian_sigma)"/>
+		<param name="error_function" type="string" value="$(arg error_function)"/>
+
+		<node name="calculate_gp_node" pkg="floaty_pkg" type="calculate_gp_node.py" 
+					 required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that runs a service to create plots --> 
+	<node name="plot_airflow_from_ATI_data_node" pkg="floaty_pkg" type="plot_airflow_from_ATI_data_node.py" 
+					required="true" output="screen"/>
+
+</launch>

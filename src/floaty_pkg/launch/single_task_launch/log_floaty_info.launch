@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+
+	<!-- Node that logs floaty information published over a specific topic --> 
+	<node name="log_floaty_info_node" pkg="floaty_pkg" type="log_floaty_info_node.py" 
+					required="true" output="screen"/>
+
+</launch>

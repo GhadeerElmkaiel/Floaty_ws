@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+
+	<arg  name="base_frame"	 default="map"/>
+    <!-- The trans frame should be the same as the ati_sensor frame that is being published in netft_node -->
+	<arg  name="trans_frame" 	 default="ati_frame"/>	
+	<arg  name="transform_topic"    default="/vrpn_client_node/ATISensor/pose"/>
+
+
+
+	<group ns="frame_to_frame_tf">
+		<param name="base_frame" type="str" value="$(arg base_frame)"/>
+		<param name="trans_frame" type="str" value="$(arg trans_frame)"/>
+		<param name="transform_topic" type="str" value="$(arg transform_topic)"/>
+		<node name="$(arg base_frame)_to_$(arg trans_frame)_tf" pkg="floaty_pkg" type="tf_transform_node" 
+					 required="true" output="screen"/>
+	</group>
+
+</launch>

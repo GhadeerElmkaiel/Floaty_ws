@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+	<arg  name="number_of_windy_motors" default="7" doc=""/>
+
+	<!-- Node that runs a service to control Windy's maestro motors --> 
+	<group ns="maestro_control">
+		<param name="number_of_motors" type="int" value="$(arg number_of_windy_motors)"/>
+
+		<node name="maestro_node" pkg="floaty_pkg" type="maestro_node" 
+					 required="true" output="screen"/>
+	</group>
+
+</launch>

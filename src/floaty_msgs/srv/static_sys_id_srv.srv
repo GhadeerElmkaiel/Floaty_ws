@@ -1,0 +1,8 @@
+int32 number_of_measurements # The number of measurement per configuration
+float32[] default_angles # the default angles of the motors
+float32 min_angle # the minimum angles to test, it can be negative
+float32 max_angle # the maximum angles to test, it can be negative
+float32 angle_resolution # the change between two consecutive angles
+float32[] motors_to_move_direction # a list of rates of change in motors angles [1, 0.5, -0.5, 0] means that the first motors angle increase by 
+---
+int32 ok # 1 if the request recieved and processed

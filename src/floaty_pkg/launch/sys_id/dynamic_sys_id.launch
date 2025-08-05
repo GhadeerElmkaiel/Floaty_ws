@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<launch>
+
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+	<rosparam file="$(find floaty_pkg)/config/dynamic_sys_id.yaml"/>
+
+	<arg  name="use_NatNet"	 default="1" doc="Choose to use NatNet (value 1) or not (other values)"/>
+
+	<!-- Node that runs a service to record the loadcell data --> 
+	<group ns="ATI_recorder">
+		<!-- <param name="ATI_record_rate" type="int" value="$(arg ATI_record_rate)"/> -->
+		<node name="ATI_recorder_node" pkg="floaty_pkg" type="ATI_recorder_node" 
+						required="true" output="screen"/>
+	</group>
+
+	<!-- Node that runs a service to record the vrpn data --> 
+	<!-- <group ns="vrpn_recorder">
+		<node name="vrpn_recorder_node" pkg="floaty_pkg" type="vrpn_recorder_node" 
+						required="true" output="screen"/>
+	</group> -->
+
+	<!-- Node that runs a service to record the vrpn data --> 
+	<group ns="topic_recorder">
+		<node name="topic_recorder_node" pkg="floaty_pkg" type="topic_recorder_node" 
+						required="true" output="screen"/>
+	</group>
+
+	<!-- Node that runs a service to control Windy's maestro motors --> 
+	<group ns="maestro_control">
+		<node name="maestro_node" pkg="floaty_pkg" type="maestro_node" 
+						required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that communicates with the CF -->
+	<group ns="crazyradio">
+		<node name="crazyradio_node" pkg="floaty_pkg" type="crazyradio_node.py" 
+						required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that runs the loop for all calculations --> 
+	<group ns="dynamic_sys_id">
+		<node name="dynamic_system_identification_node" pkg="floaty_pkg" type="dynamic_system_identification_node.py" 
+						required="true" output="screen"/>
+	</group>
+	
+
+	<!-- Node that read Optitrack data and publishs it over ROS --> 
+	<group ns="NatNet" if="$(eval arg('use_NatNet') ==1)">
+		<node name="NatNet_node" pkg="floaty_pkg" type="NatNet_node" 
+						required="true" output="screen"/>
+	</group>
+	
+	<!-- Reading the ATI sensor data via ROS -->
+	<include file="$(find netft_rdt_driver)/launch/ft_sensor.launch">
+	</include>
+
+	<!-- Reading the Optitrack data via ROS -->
+	<!-- <include file="$(find vrpn_client_ros)/launch/sample.launch">
+		<arg  name="server"	 default="$(arg server)"/>
+	</include> -->
+
+	
+
+
+	<!-- Run VRPN for receiving mocap data -->
+	<!-- <include file="$(find vrpn_client_ros)/launch/sample.launch">
+		<arg  name="server"	 default="$(arg mocap_server)"/>
+	</include> -->
+
+	<!-- <node type="rviz" name="rviz" pkg="rviz" args="-d $(find floaty_pkg)/rviz/rviz_config.rviz" /> -->
+
+
+</launch>

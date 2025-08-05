@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<launch>
+	<arg  name="base_frame"	 default="map" doc=""/>
+	<arg  name="loadcell_frame"	 default="loadcell" doc=""/>
+	<arg  name="loadcell_mocap_topic"	 default="/vrpn_client_node/ATISensor/pose" doc=""/>
+	<arg  name="mocap_server" default="192.168.2.2" doc=""/>
+	<!-- Data recording parameter -->
+	<arg  name="data_to_record" default="100" doc=""/>
+	<arg  name="data_file_name" default="recorded_data.csv" doc=""/>
+	<arg  name="record_duration" default="0.5" doc="The time to wait between two samples from the loadcell"/>
+	<!-- Maestro control parapeters -->
+	<arg  name="number_of_windy_motors" default="6" doc="The number of motors in Windy (The windtunnle ;P)"/>
+
+	<!-- GP process parapeters -->
+	<arg  name="gp_mesh_radius" default="0.2" doc="Radius of the circle over which we want to uniform the airflow"/>
+	<arg  name="gp_mesh_gap" default="0.02" doc="The distance between two points in the GP mesh"/>
+	<arg  name="motors_speed_update_rate" default="0.8" doc="The update rate for the motors speeds 'LASS THAN 2'"/>
+	<arg  name="motors_speed_update_rate_decay" default="0.85" doc="The value of the update rate decay'"/>
+	<arg  name="gp_uniform_value" default="0.7" doc="The value of the force over the uniform field"/>
+	<arg  name="motors_gaussian_sigma" default="0.15" doc="The Sigma for the motors gaussian distribution"/>
+	<arg  name="max_number_of_iterations" default="7" doc="The number of iterations in the algorithm"/>
+	<arg  name="error_function" default="linear" doc="The function to calculate the error, ite defines the distribution"/>
+
+
+	<!-- Broadcasting the tf transform between the loadcell and the base frame -->
+	<include file="$(find floaty_pkg)/launch/frame_to_frame_tf.launch">
+		<arg  name="base_frame"	 default="$(arg base_frame)"/>
+		<arg  name="trans_frame"	 default="$(arg loadcell_frame)"/>
+		<arg  name="transform_topic"	 default="$(arg loadcell_mocap_topic)"/>
+	</include>
+
+
+	<!-- Node that runs a service to record the loadcell data --> 
+	<group ns="data_recorder">
+		<param name="data_topic" type="str" value="/ft_sensor/netft_data"/>
+		<param name="mocap_topic" type="str" value="$(arg loadcell_mocap_topic)"/>
+		<param name="data_file_name" type="str" value="$(find floaty_pkg)/data/$(arg data_file_name)"/>
+		<param name="data_to_record" type="int" value="$(arg data_to_record)"/>
+		<param name="record_duration" type="double" value="$(arg record_duration)"/>
+
+		<node name="data_recorder_node" pkg="floaty_pkg" type="data_recorder_node" 
+					 required="true" output="screen"/>
+	</group>
+
+	<!-- Node that runs a service to control Windy's maestro motors --> 
+	<group ns="maestro_control">
+		<param name="number_of_motors" type="int" value="$(arg number_of_windy_motors)"/>
+
+		<node name="maestro_node" pkg="floaty_pkg" type="maestro_node" 
+					 required="true" output="screen"/>
+	</group>
+
+	<!-- Iterative learning related nodes --> 
+	<include file="$(find floaty_pkg)/launch/iterative_learning.launch">
+		<arg  name="gp_mesh_radius"	 default="$(arg gp_mesh_radius)"/>
+		<arg  name="gp_mesh_gap"	 default="$(arg gp_mesh_gap)"/>
+		<arg  name="motors_speed_update_rate"	 default="$(arg motors_speed_update_rate)"/>
+		<arg  name="motors_speed_update_rate_decay"	 default="$(arg motors_speed_update_rate_decay)"/>
+		<arg  name="gp_uniform_value"	 default="$(arg gp_uniform_value)"/>
+		<arg  name="motors_gaussian_sigma"	 default="$(arg motors_gaussian_sigma)"/>
+		<arg  name="max_number_of_iterations"	 default="$(arg max_number_of_iterations)"/>
+		<arg  name="error_function"	 default="$(arg error_function)"/>
+	</include>
+
+	<!-- Reading the ATI sensor data via ROS -->
+	<include file="$(find netft_rdt_driver)/launch/ft_sensor.launch">
+		<arg  name="frame_id"	 default="$(arg loadcell_frame)"/>
+	</include>
+
+
+	<!-- Node that runs a service to Measure Windy's motors thrust --> 
+	<node name="motor_thrust_measure_node" pkg="floaty_pkg" type="motor_thrust_measure_node" 
+					required="true" output="screen"/>
+
+
+	<!-- Run VRPN for receiving mocap data -->
+	<include file="$(find vrpn_client_ros)/launch/sample.launch">
+		<arg  name="server"	 default="$(arg mocap_server)"/>
+	</include>
+
+	<node type="rviz" name="rviz" pkg="rviz" args="-d $(find floaty_pkg)/rviz/rviz_config.rviz" />
+
+
+</launch>

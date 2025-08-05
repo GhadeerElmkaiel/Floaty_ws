@@ -1,0 +1,262 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import os
+
+current_file_dir = os.path.dirname(os.path.realpath(__file__))
+# data_file_dir = current_file_dir +"/../../../data/floaty_estimator/Sys_Id_flying/"
+data_file_dir = current_file_dir +"/../../../data/floaty_estimator/"
+
+# data_file_names = ["floaty_data_89.csv", "floaty_data_90.csv", "floaty_data_91.csv", "floaty_data_92.csv"]
+# data_file_names = ["floaty_data_90.csv", "floaty_data_91.csv"]
+# data_file_names = ["floaty_data_89.csv"]
+# data_file_names = ["floaty_data_171.csv"]
+
+# Data from almost flying experiments
+# data_file_names = ["floaty_data_207.csv", "floaty_data_208.csv"]
+
+# data_file_names = ["sys_id_controller_1_1.csv", "sys_id_controller_1_2.csv", "sys_id_controller_1_3.csv"]
+# data_file_names = ["sys_id_controller_2_1.csv", "sys_id_controller_2_2.csv", "sys_id_controller_2_3.csv"]
+
+data_file_names = ["floaty_data_450.csv"]
+
+# all_data = np.array([[0,0,0,0,0,0]])
+# for folder_dir in folders_dir:
+
+
+# This function is to apply a /------\ shaped window so the FFT transform is better as without it
+# The transform assumes that it is repeating and it will have high jumps which leads to high freqs
+def apply_window(data, ramp_len):
+    for i in range(ramp_len):
+        multiplier = i/ramp_len
+        data[i] = data[i]*multiplier
+        data[-1-i] = data[-1-i]*multiplier
+    return data
+
+
+# Here a list of lists that includes the start and end points of each data segment that I want to use
+# The data segments are chosen when the robot was to some extent flying (the teather was not tense)
+
+# floaty_data_82.csv
+# files_windows_to_read = [[[750, 800],  [1350, 1400], [1400, 1450]]]
+
+# files_windows_to_read = [[[970 , 1020], [1500, 1550], [1970, 2020]]]
+
+# files_windows_to_read = [[[970 , 1020], [1500, 1550], [1970, 2020]], 
+#                         #  [[645, 695],  [1360, 1410], [1420, 1470]],
+#                          [[750 , 800],  [870,  920],  [1350, 1400], [1400, 1450]],
+#                          [[1475, 1525], [1720,  1770],[1810,  1860],[1910,  1960]],
+#                          [[500 , 550],  [2770,  2820]]]
+
+# files_windows_to_read = [[[1700 , 1950], [1950, 2200], [2200, 2450]]]
+# files_windows_to_read = [[[1700 , 1850], [1850, 2000], [2000, 2150], [2150, 2300], [2300, 2450]]]
+
+
+
+# files_windows_to_read = [[[400 , 600], [600, 800], [800, 1000], [1100, 1300], [1300, 1500], [1500, 1700], [1700, 1900], [1900, 2100], [2050, 2250]], 
+                        #  [[500 , 700], [700, 900], [900, 1100], [1100, 1300], [1300, 1500], [1500, 1700], [1700, 1900], [1900, 2100], [2100, 2300], [2300, 2500]],
+                        #  [[500, 700], [700, 900], [900, 1100]]]
+
+
+# # Sys Id 1
+# files_windows_to_read = [[[400 , 600], [600, 800], [1300, 1500], [1500, 1700], [1700, 1900], [1900, 2100], [2050, 2250]], 
+#                          [[500 , 700], [700, 900], [900, 1100], [1300, 1500], [1700, 1900], [1900, 2100], [2300, 2500]],
+#                          [[500, 700], [700, 900], [900, 1100]]]
+
+files_windows_to_read = [[[800 , 1000], [1000, 1200], [1150, 1350], [1300, 1500]]]
+
+# The data sampling frequency
+max_freq = 50
+data_file_header = "idx	est_x	est_y	est_z	est_vx	est_vy	est_vz	est_roll	est_pitch	est_yaw	est_roll_rate	est_pitch_rate	est_yaw_rate	est_f1	est_f2	est_f3	est_f4	Optitrack_x	Optitrack_y	Optitrack_z	roll	pitch	yaw	gyro_x	gyro_y	gyro_z	command_m1	command_m2	command_m3	command_m4	control_f1	control_f2	control_f3	control_f4"
+data_file_columns = data_file_header.split("	")
+Num_last_freq_to_use = 16
+Num_freq_to_skip = 2
+
+columns_ids = {}
+for i in range(len(data_file_columns)):
+    columns_ids[data_file_columns[i]] = i
+
+
+used_columns = ["Optitrack_y", "est_vy", "roll", "est_roll_rate"]
+value_to_conjugate = "roll"
+
+# used_columns = ["est_vx", "pitch", "est_pitch_rate"]
+# value_to_conjugate = "pitch"
+
+used_colors = ["cyan", "red", "blue", "green"]
+
+amplitudes = {}
+real_vals = {}
+imag_vals = {}
+A_vals = {}
+for column in used_columns:
+    amplitudes[column] = np.array([[]])
+    real_vals[column] = np.array([[]])
+    imag_vals[column] = np.array([[]])
+    A_vals[column] = np.array([])
+
+y_vals = np.array([])
+y_real_vals = np.array([])
+y_imag_vals = np.array([])
+
+fig = plt.figure()
+
+# =========== Main Idea ===========
+# The idea is to get the FFT transform of different windows of data
+# We remove the noise by only using low frequencies
+# We also use the real and imaginary part instead of amplitude (especially when averaging)
+# as the average of amplitude DOES NOT EQUAL the amplitude of the average
+# However, it is possible to use the amplitude if we don't average and we use the least square
+# over all data segments.
+# I believe that using all data is better than averaging as different experiments have different
+# amplitudes which might make the average worse.
+# I also believe that using the amplitude might be better than using real and imaginary parts
+# especially when having the closed loop dynamics as the closed loop dynamics might induce some delays
+# which affects tha phase (but should not affect the amplitude). This means that real and imaginary
+# parts will be affected
+# 
+
+
+for file_num, data_file_name in enumerate(data_file_names):
+    df = pd.read_csv(data_file_dir + data_file_name, header=None)
+    np_arr = df.to_numpy()
+    windows_to_read = files_windows_to_read[file_num]
+
+    for window in windows_to_read:
+        window_start = window[0]
+        window_end = window[1]
+        window_size = window_end-window_start
+        freqs = np.fft.fftfreq(window_size)*max_freq
+
+        # low_freqs = [freq for freq in freqs if freq<Num_last_freq_to_use and freq>=0]
+        
+        for iter, column in enumerate(used_columns):
+            idx = columns_ids[column]
+            data = np.array([float(x) for x in np_arr[window_start:window_end, idx]])
+            data_with_win = apply_window(data, 3)
+            fft_res = np.fft.fft(data_with_win)/len(data_with_win)
+
+            reals = np.real(fft_res)
+            imags = np.imag(fft_res)
+
+            amps = np.abs(fft_res)
+            angs = [np.angle(f) if (abs(amps[i])>0.0001) else 0 for (i,f) in enumerate(fft_res)]
+            # if window_num ==0:
+            # For the initial case
+            if amplitudes[column].size == 0:
+                amplitudes[column] = np.array([amps])
+                # Only add the low frequency to remove noise
+                real_vals[column] = np.array(reals[Num_freq_to_skip:Num_last_freq_to_use])
+                imag_vals[column] = np.array(imags[Num_freq_to_skip:Num_last_freq_to_use])
+            else:
+                amplitudes[column] = np.vstack([amplitudes[column], amps])
+                # Only add the low frequency to remove noise
+                real_vals[column] = np.vstack([real_vals[column], reals[Num_freq_to_skip:Num_last_freq_to_use]])
+                imag_vals[column] = np.vstack([imag_vals[column], imags[Num_freq_to_skip:Num_last_freq_to_use]])
+
+            # The amplitudes of the low frequencies
+            A_vals[column] = np.append(A_vals[column] , amps[Num_freq_to_skip:Num_last_freq_to_use])
+            if "rate" in column:
+                # Theta_dot_dot[s] = s*theta_dot[s]   (Derivative)
+                # The amplitude case we anly care about the frequency |j*2pi*f| = 2*pi*f
+                y_vals = np.append(y_vals, np.array(amps[Num_freq_to_skip:Num_last_freq_to_use]*freqs[Num_freq_to_skip:Num_last_freq_to_use])*2*np.pi)
+                # s = jw = j*2pi*f
+                jw_freqs = freqs*complex(0,2*np.pi)
+                jw_rates = fft_res*jw_freqs
+                y_real_vals = np.append(y_real_vals, np.real(jw_rates[Num_freq_to_skip:Num_last_freq_to_use]))
+                y_imag_vals = np.append(y_imag_vals, np.imag(jw_rates[Num_freq_to_skip:Num_last_freq_to_use]))
+            # plt.plot(freqs, amps[Num_freq_to_skip:window_size//2])
+            plt.plot(freqs[Num_freq_to_skip:window_size//2], amps[Num_freq_to_skip:window_size//2], color=used_colors[iter])
+            plt.show()
+    # fig = plt.figure()
+
+    # data = np_arr[]
+
+avg_amplitudes = {}
+avg_reals = {}
+avg_imags = {}
+for iter, column in enumerate(used_columns):
+    avg_amplitudes[column] = np.average(amplitudes[column], axis=0)
+    avg_reals[column] = np.average(real_vals[column], axis=0)
+    avg_imags[column] = np.average(imag_vals[column], axis=0)
+    plt.plot(freqs[Num_freq_to_skip:window_size//2], avg_amplitudes[column][Num_freq_to_skip:window_size//2], color=used_colors[iter], linestyle='dashed')
+    plt.show()
+
+# calc_ang_rates = avg_amplitudes["roll"]*freqs
+# plt.plot(freqs[Num_freq_to_skip:window_size//2], calc_ang_rates[Num_freq_to_skip:window_size//2], color="black", linestyle='dashed')
+
+
+# This is not correct because I am using the amplitude with the average [avg(amp) != amp(avg)]
+# # ======================================================
+# # Calculate constants using the average over all windows
+
+# A_mat_T = np.array([avg_amplitudes["est_roll_rate"][Num_freq_to_skip:Num_last_freq_to_use], avg_amplitudes["roll"][Num_freq_to_skip:Num_last_freq_to_use], avg_amplitudes["est_vy"][Num_freq_to_skip:Num_last_freq_to_use]])
+# y = np.array(avg_amplitudes["est_roll_rate"][Num_freq_to_skip:Num_last_freq_to_use]*freqs[Num_freq_to_skip:Num_last_freq_to_use])
+# A_mat = A_mat_T.transpose()
+
+# AT_A = np.matmul(A_mat_T, A_mat)
+# AT_A_1 = np.linalg.inv(AT_A)
+
+# consts_from_avg = np.matmul(AT_A_1, np.matmul(A_mat_T, y))
+
+
+
+# =========================== Amplitude ===========================
+# Calculate constants using the average over all windows
+
+# Roll and y
+A_mat_T = np.array([A_vals["est_roll_rate"], A_vals["roll"], A_vals["est_vy"], A_vals["Optitrack_y"]])
+y = np.array(y_vals)
+
+# Pitch and x
+# A_mat_T = np.array([np.append(avg_reals["est_pitch_rate"], avg_imags["est_pitch_rate"]), np.append(avg_reals["pitch"], avg_imags["pitch"]), np.append(avg_reals["est_vx"], avg_imags["est_vx"])])
+# y = np.array(np.append(-2*np.pi*avg_imags["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use], 2*np.pi*avg_reals["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use]))
+
+A_mat = A_mat_T.transpose()
+
+AT_A = np.matmul(A_mat_T, A_mat)
+AT_A_1 = np.linalg.inv(AT_A)
+
+consts_from_amplitude = np.matmul(AT_A_1, np.matmul(A_mat_T, y))
+
+
+# =========================== Real and Imaginary (avg) ===========================
+# Calculate constants using the average over all windows
+
+# Roll and y
+A_mat_T_avg = np.array([np.append(avg_reals["est_roll_rate"], avg_imags["est_roll_rate"]), np.append(avg_reals["roll"], avg_imags["roll"]), np.append(avg_reals["est_vy"], avg_imags["est_vy"]), np.append(avg_reals["Optitrack_y"], avg_imags["Optitrack_y"])])
+y = np.array(np.append(-2*np.pi*avg_imags["est_roll_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use], 2*np.pi*avg_reals["est_roll_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use]))
+
+# Pitch and x
+# A_mat_T = np.array([np.append(avg_reals["est_pitch_rate"], avg_imags["est_pitch_rate"]), np.append(avg_reals["pitch"], avg_imags["pitch"]), np.append(avg_reals["est_vx"], avg_imags["est_vx"])])
+# y = np.array(np.append(-2*np.pi*avg_imags["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use], 2*np.pi*avg_reals["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use]))
+
+A_mat_avg = A_mat_T_avg.transpose()
+
+AT_A = np.matmul(A_mat_T_avg, A_mat_avg)
+AT_A_1 = np.linalg.inv(AT_A)
+
+consts_from_avg = np.matmul(AT_A_1, np.matmul(A_mat_T_avg, y))
+
+
+# =========================== Real and Imaginary (all) ===========================
+# Calculate constants using the values from all windows
+
+# Roll and y
+A_mat_T_all = np.array([np.append(real_vals["est_roll_rate"], imag_vals["est_roll_rate"]), np.append(real_vals["roll"], imag_vals["roll"]), np.append(real_vals["est_vy"], imag_vals["est_vy"]), np.append(real_vals["Optitrack_y"], imag_vals["Optitrack_y"])])
+y = np.array(np.append(-2*np.pi*imag_vals["est_roll_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use], 2*np.pi*real_vals["est_roll_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use]))
+
+# Pitch and x
+# A_mat_T = np.array([np.append(real_vals["est_pitch_rate"], imag_vals["est_pitch_rate"]), np.append(real_vals["pitch"], imag_vals["pitch"]), np.append(real_vals["est_vx"], imag_vals["est_vx"])])
+# y = np.array(np.append(-2*np.pi*imag_vals["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use], 2*np.pi*real_vals["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use]))
+
+A_mat_all = A_mat_T_all.transpose()
+
+AT_A = np.matmul(A_mat_T_all, A_mat_all)
+AT_A_1 = np.linalg.inv(AT_A)
+consts_from_all = np.matmul(AT_A_1, np.matmul(A_mat_T_all, y))
+
+print("Consts from amplitude: ", consts_from_amplitude)
+print("Consts from R/I avg: ", consts_from_avg)
+print("Consts from R/I all: ", consts_from_all)
+print("done")

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<launch>
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+
+	<arg  name="loadcell_frame"	 default="loadcell" doc=""/>
+	<arg  name="ATI_record_rate"	 default="200" doc="The rate with which the ATI sensor is recording the data"/>
+
+	<!-- Node that runs a service to record the loadcell data --> 
+	<group ns="ATI_recorder">
+		<param name="ATI_record_rate" type="int" value="$(arg ATI_record_rate)"/>
+		<node name="ATI_recorder_node" pkg="floaty_pkg" type="ATI_recorder_node" 
+						required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that runs a service to record the vrpn data --> 
+	<group ns="topic_recorder">
+		<node name="topic_recorder_node" pkg="floaty_pkg" type="topic_recorder_node" 
+						required="true" output="screen"/>
+	</group>
+
+	<!-- Node that runs a service to control Windy's maestro motors --> 
+	<group ns="maestro_control">
+		<node name="maestro_node" pkg="floaty_pkg" type="maestro_node" 
+						required="true" output="screen"/>
+	</group>
+
+	<!-- Node that runs a service to start collecting the data and fitting the polinomial --> 
+	<group ns="Windys_thrust_fit">
+		<node name="windys_motor_poly_fit_node" pkg="floaty_pkg" type="windys_motor_poly_fit_node.py" 
+						required="true" output="screen"/>
+	</group>
+
+	<!-- Reading the ATI sensor data via ROS -->
+	<include file="$(find netft_rdt_driver)/launch/ft_sensor.launch">
+		<arg  name="frame_id"	 default="$(arg loadcell_frame)"/>
+		<arg  name="rate"	 default="$(arg ATI_record_rate)"/>
+	</include>
+
+
+
+</launch>

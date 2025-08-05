@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+	<!-- <arg  name="number_of_windy_motors" default="6" doc=""/> -->
+
+	<!-- Node that runs a service to manage communication with CF over radio --> 
+	<group ns="crazyradio">
+		<node name="crazyradio_node" pkg="floaty_pkg" type="crazyradio_node.py" 
+					 required="true" output="screen"/>
+	</group>
+
+</launch>

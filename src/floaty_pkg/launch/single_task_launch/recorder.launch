@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+	<!-- <arg  name="ATI_record_rate"	 default="1000" doc="The rate with which the ATI sensor is recording the data"/> -->
+
+	<!-- Node that runs a service to record the loadcell data --> 
+	<group ns="ATI_recorder">
+		<!-- <param name="ATI_record_rate" type="int" value="$(arg ATI_record_rate)"/> -->
+		<node name="ATI_recorder_node" pkg="floaty_pkg" type="ATI_recorder_node" 
+						required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that runs a service to record the multiple data types --> 
+	<group ns="topic_recorder">
+		<node name="topic_recorder_node" pkg="floaty_pkg" type="topic_recorder_node" 
+						required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that runs a service to record the simultaneously force and position data --> 
+	<group ns="data_recorder">
+		<node name="data_recorder_node" pkg="floaty_pkg" type="data_recorder_node" 
+						required="true" output="screen"/>
+	</group>
+
+</launch>

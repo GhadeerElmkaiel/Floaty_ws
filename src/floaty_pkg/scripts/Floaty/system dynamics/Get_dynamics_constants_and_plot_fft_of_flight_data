@@ -1,0 +1,534 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import os
+
+current_file_dir = os.path.dirname(os.path.realpath(__file__))
+data_file_dir = current_file_dir +"/../../../data/floaty_estimator/Sys_Id_flying/"
+# # Science Robotics data
+data_file_dir = current_file_dir +"/../../../data/floaty_estimator/Sys_Id_flying/Science_Robotics_data/"
+# # Floaty V4
+data_file_dir = current_file_dir +"/../../../data/floaty_estimator/Sys_Id_flying/V4/"
+
+
+# Data from almost flying experiments
+# data_file_names = ["floaty_data_207.csv", "floaty_data_208.csv"]
+
+# data_file_names = ["sys_id_controller_1_1.csv", "sys_id_controller_1_2.csv", "sys_id_controller_1_3.csv"]
+# data_file_names = ["sys_id_controller_1_2.csv"]
+
+# data_file_names = ["sys_id_controller_2_1.csv", "sys_id_controller_2_2.csv", "sys_id_controller_2_3.csv"]
+
+# data_file_names = ["sys_id_controller_3_1.csv", "sys_id_controller_3_2.csv", "sys_id_controller_3_3.csv", "sys_id_controller_3_4.csv", "sys_id_controller_3_5.csv", "sys_id_controller_3_6.csv",] # "sys_id_controller_3_7.csv"]
+
+# data_file_names = ["sys_id_controller_4_1.csv", "sys_id_controller_4_2.csv", "sys_id_controller_4_3.csv", "sys_id_controller_4_4.csv", "sys_id_controller_4_5.csv", "sys_id_controller_4_6.csv"]
+
+# data_file_names = ["sys_id_controller_5_1.csv", "sys_id_controller_5_2.csv", "sys_id_controller_5_3.csv"]
+
+# data_file_names = ["sys_id_controller_6_1.csv", "sys_id_controller_6_2.csv", "sys_id_controller_6_3.csv", "sys_id_controller_6_4.csv",]
+
+# data_file_names = ["floaty_v3_sys_id_1.csv"]
+# data_file_names = ["floaty_v3_sys_id_3.csv"]
+
+# Floaty V3
+# data_file_names = ["floaty_v4_sys_id_1.csv"]
+# data_file_names = ["floaty_v4_sys_id_2.csv"]
+# data_file_names = ["floaty_v4_ctrl_1_sys_id_1.csv"]
+# data_file_names = ["floaty_v4_ctrl_1_sys_id_2.csv"]
+# data_file_names = ["floaty_v4_ctrl_1_sys_id_3.csv"]
+# Sys Id 4
+# data_file_names = ["floaty_v4_ctrl_1_sys_id_1.csv", "floaty_v4_ctrl_1_sys_id_2.csv", "floaty_v4_ctrl_1_sys_id_3.csv"]
+
+# data_file_names = ["floaty_v4_ctrl_2_sys_id_1.csv"]
+# data_file_names = ["floaty_v4_ctrl_2_sys_id_2.csv"]
+# data_file_names = ["floaty_v4_ctrl_2_sys_id_1.csv", "floaty_v4_ctrl_2_sys_id_2.csv"]
+
+
+# # Science Robotics data
+# data_file_names = ["floaty_v4_ctrl_1_sys_id_1.csv"]
+# data_file_names = ["floaty_v4_ctrl_2_sys_id_1.csv"]
+
+
+# # Floaty V4
+data_file_names = ["ctrl_1_test_1.csv", "ctrl_1_test_2.csv", "ctrl_1_test_3.csv"]
+# data_file_names = ["ctrl_2_test_1.csv"]
+
+# all_data = np.array([[0,0,0,0,0,0]])
+# for folder_dir in folders_dir:
+
+
+# This function is to apply a /------\ shaped window so the FFT transform is better as without it
+# The transform assumes that it is repeating and it will have high jumps which leads to high freqs
+def apply_window(data, ramp_len):
+    for i in range(ramp_len):
+        multiplier = i/ramp_len
+        data[i] = data[i]*multiplier
+        data[-1-i] = data[-1-i]*multiplier
+    return data
+
+
+# Functino to calculate the uncertainty in the estimation
+def calculate_uncertainty(A_mat, y, consts):
+    residuals = y - np.matmul(A_mat, consts)
+    N, p = A_mat.shape
+    variance = np.sum(residuals**2) / (N - p)
+    cov_matrix = variance * np.linalg.inv(np.matmul(A_mat.T, A_mat))
+    std_errors = np.sqrt(np.diag(cov_matrix))
+    return std_errors
+
+
+# Here a list of lists that includes the start and end points of each data segment that I want to use
+# The data segments are chosen when the robot was to some extent flying (the teather was not tense)
+
+
+# Sys Id 1
+# files_windows_to_read = [[[400 , 600], [600, 800], [1300, 1500], [1500, 1700], [1700, 1900], [1900, 2100], [2050, 2250]], 
+#                          [[500 , 700], [700, 900], [900, 1100], [1300, 1500], [1700, 1900], [1900, 2100], [2300, 2500]],
+#                          [[500, 700], [700, 900], [900, 1100]]]
+
+# Sys Id 2
+# files_windows_to_read = [[[600, 800], [800, 1000], [1300, 1500], [1500, 1700], [1700, 1900], [2100, 2300]], 
+#                          [[500 , 700], [700, 900], [900, 1100], [1300, 1500], [1500, 1700], [1700, 1900], [2100, 2300], [2300, 2500]],
+#                          [[500 , 700], [900, 1100], [1100, 1300], [1900, 2100], [2100, 2300], [2500, 2700]]]
+
+# Sys Id 3
+# files_windows_to_read = [
+#                          [[400, 600], [600, 800], [800, 1000]], 
+#                          [[350 , 550],],
+#                          [[350 , 550], [450 , 650], [900 , 1100],],
+#                          [[550 , 750]],
+#                          [[350 , 550], [550 , 750], [750 , 950], [950, 1150], [1150 , 1350], [1350 , 1550], [1550 , 1750], [1750 , 1950], [1950 , 2150]],
+#                          [[450 , 650]],
+#                          ]
+
+# Sys Id 4
+# files_windows_to_read = [[[300, 500], [450, 650]], 
+#                          [[650 , 850], [850 , 1050], [1000 , 1200], [1150 , 1350]],
+#                          [[320 , 520], [520 , 720]],
+#                          [[300 , 500], [400 , 600]],
+#                          [[300 , 500], [500 , 700], [700 , 900]],
+#                          [[500 , 700], [700 , 900], [900 , 1100]],]
+
+
+# # Sys Id 5
+# files_windows_to_read = [
+#                          [[500 , 700], [900, 1100], [1100, 1300], [1500, 1700], [1700, 1900], [1900, 2100], [2100, 2300], [2300, 2500]],
+#                          [[950 , 1150]],                  
+#                          [[500 , 700], [620 , 820]],      
+#                         #  [[900 , 1100], [2100 , 2300], [2300 , 2500], [2500 , 2700]],      
+#                          ]
+
+# Sys Id 6
+# files_windows_to_read = [
+#                          [[625 , 825]],                  
+#                          [[2000, 2200], [2175, 2375],],
+#                          [[350, 550]],                  
+#                          [[350 , 550], [550 , 750], [950 , 1150], [1150 , 1350]], 
+#                          ]
+
+# No controller
+# files_windows_to_read = [
+#                          [[4050, 4250], [4250, 4450], [4450, 4650],], 
+#                          [[3940, 4140], [4140, 4340], [4340, 4540], [4540, 4740], [4740, 4940],], 
+#                          ]
+
+
+# Floaty V3
+# # Sys Id 1
+# files_windows_to_read = [
+#                          [[1825 , 1925], [2135, 2235], [2330, 2430], [2540, 2640], [5050, 5150], [5525, 5625], [7300, 7400], [7400, 7500], [7525, 7625]]    
+#                          ]
+
+# Sys Id 3
+# files_windows_to_read = [
+#                          [[5600 , 5700], [5700 , 5800], [5800 , 5900], [5900, 6000], [6100, 6200], [6200, 6300], [6300, 6400], [6400, 6500], [6500, 6600]]    
+#                          ]
+
+# Floaty V4
+# # Sys Id 1
+# files_windows_to_read = [
+#                          [[1200 , 1300], [1300 , 1400], [1400 , 1500], [3050, 3150], [3150, 3250], [3250, 3350], [4400, 4500], [4500, 4600], [6600, 6700]]    
+#                          ]
+# # Sys Id 2
+# files_windows_to_read = [
+#                          [[4450 , 4550], [4800 , 4900], [6500 , 6600], [6700, 6800], [9500, 9600], [9700, 9800], [10300, 10400], [10400, 10500], [10500, 10600]]    
+#                          ]
+# # Sys Id 3 
+# # floaty_v4_ctrl_1_sys_id_1
+# files_windows_to_read = [
+#                          [[1200 , 1300], [1300 , 1400], [1400 , 1500], [1500, 1600], [1600, 1700], [1700, 1800], [1800, 1900], [1900, 2000], [2000, 2100], [2100, 2200]]    
+#                          ]
+# # floaty_v4_ctrl_1_sys_id_2
+# files_windows_to_read = [
+#                          [[2500, 2600], [2600, 2700], [2700, 2800], [2800, 2900], [2900, 3000], [3000, 3100], [3100, 3200], [4950, 5050], [5050, 5150], [5900, 6000], [6000, 6100], [6100, 6200], [6200, 6300], [6300, 6400]],
+#                          ]
+# # floaty_v4_ctrl_1_sys_id_3
+# files_windows_to_read = [
+#                          [[1150, 1250], [1250, 1350], [1350, 1450], [1450, 1550], [1700, 1800], [2540, 2640], [2640, 2740], [2740, 2840], [2840, 2940], [2940, 3040]],
+#                          ]
+
+# # Sys Id 4 ("floaty_v4_ctrl_1_sys_id_1.csv", "floaty_v4_ctrl_1_sys_id_2.csv", "floaty_v4_ctrl_1_sys_id_3.csv")
+# files_windows_to_read = [
+#                          [[1200 , 1300], [1300 , 1400], [1400 , 1500], [1500, 1600], [1600, 1700], [1700, 1800], [1800, 1900], [1900, 2000], [2000, 2100], [2100, 2200]],
+#                          [[2500, 2600], [2600, 2700], [2700, 2800], [2800, 2900], [2900, 3000], [3000, 3100], [3100, 3200], [4950, 5050], [5050, 5150], [5900, 6000], [6000, 6100], [6100, 6200], [6200, 6300], [6300, 6400]],
+#                          [[1150, 1250], [1250, 1350], [1350, 1450], [1450, 1550], [1700, 1800], [2540, 2640], [2640, 2740], [2740, 2840], [2840, 2940], [2940, 3040]],
+#                          ]
+
+# # Sys Id 4 ("floaty_v4_ctrl_2_sys_id_1.csv", "floaty_v4_ctrl_2_sys_id_2.csv")
+# # floaty_v4_ctrl_2_sys_id_1
+# files_windows_to_read = [
+#                          [[1100 , 1200], [1750 , 1850], [3500 , 3600], [3600, 3700], [4200, 4300], [4300, 4400], [4400, 4500], [4500, 4600], [4600, 4700], [4700, 4800], [5250, 5350], [5350, 5450]],
+#                          ]
+# # floaty_v4_ctrl_2_sys_id_2
+# files_windows_to_read = [
+#                          [[1100, 1200], [1200, 1300], [2300, 2400], [2400, 2500], [2500, 2600], [2600, 2700], [2700, 2800], [2800, 2900], [2900, 3000], [3000, 3100]],
+#                          ]
+# # Sys Id 4 ("floaty_v4_ctrl_2_sys_id_1.csv", "floaty_v4_ctrl_2_sys_id_2.csv")
+# files_windows_to_read = [
+#                          [[1100 , 1200], [1750 , 1850], [3500 , 3600], [3600, 3700], [4200, 4300], [4300, 4400], [4400, 4500], [4500, 4600], [4600, 4700], [4700, 4800], [5250, 5350], [5350, 5450]],
+#                          [[1100, 1200], [1200, 1300], [2300, 2400], [2400, 2500], [2500, 2600], [2600, 2700], [2700, 2800], [2800, 2900], [2900, 3000], [3000, 3100]],
+#                          ]
+
+# # ======================================
+# # Science Robotics data
+# # floaty_v4_ctrl_1_sys_id_1
+# files_windows_to_read = [
+#                          [[1850, 1950], [1950, 2050], [2050, 2150], [3300, 3400], [3400, 3500], [3500, 3600], [3600, 3700], [3700, 3800], [3800, 3900], [3900, 4000], [4000, 4100], [4100, 4200], [4200, 4300]],
+#                          ]
+
+# # # floaty_v4_ctrl_2_sys_id_1
+# files_windows_to_read = [
+#                          [[1180, 1280], [1280, 1380], [1380, 1480], [1480, 1580], [1580, 1680], [1680, 1780], [1780, 1880], [1880, 1980], [1980, 2080], [2080, 2180], [3450, 3550], [3550, 3650], [3650, 3750], [3750, 3850], [3850, 3950], [3950, 4050], [4050, 4150], [4150, 4250], [4250, 4350], [4350, 4450]],
+#                          ]
+
+# # ======================================
+# # Floaty V4
+# ctrl_1_sys_id_1
+files_windows_to_read = [
+                         [[1200, 1400], [1400, 1600], [1600, 1800], [1800, 2000], [2000, 2200], [2200, 2400], [2400, 2600], [2600, 2800], [2800, 3000]],
+                         [[800, 1000], [1000, 1200]],
+                         [[1000, 1200], [1200, 1400], [1400, 1600], [1600, 1800], [1800, 2000], [2000, 2200], [2200, 2400], [2400, 2600]],
+                         ]
+
+# # ctrl_1_sys_id_2
+# files_windows_to_read = [
+#                          [[1600, 1800], [1800, 2000], [1800, 2000], [2000, 2200], [2200, 2400], [2400, 2600], [2600, 2800], [3600, 3800], [3800, 4000], [4000, 4200], [4200, 4400], [4400, 4600], [4600, 4800], [4800, 5000], [5000, 5200], [7200, 7400], [7400, 7600], [7600, 7800], [7800, 8000]],
+#                          ]
+
+
+# The data sampling frequency
+max_freq = 50
+data_file_header = "idx	est_x	est_y	est_z	est_vx	est_vy	est_vz	est_roll	est_pitch	est_yaw	est_roll_rate	est_pitch_rate	est_yaw_rate	est_f1	est_f2	est_f3	est_f4	Optitrack_x	Optitrack_y	Optitrack_z	roll	pitch	yaw	gyro_x	gyro_y	gyro_z	command_m1	command_m2	command_m3	command_m4	control_f1	control_f2	control_f3	control_f4"
+data_file_columns = data_file_header.split("	")
+Num_last_freq_to_use = 20
+Num_freq_to_skip = 1
+
+columns_ids = {}
+for i in range(len(data_file_columns)):
+    columns_ids[data_file_columns[i]] = i
+
+
+used_columns = ["est_roll_rate", "roll", "est_vy", "Optitrack_y"]
+# used_columns = ["est_roll_rate", "roll", "est_vy"]
+# used_columns = ["est_roll_rate", "roll"]
+value_to_conjugate = "roll"
+
+# used_columns = ["est_pitch_rate", "pitch", "est_vx", "Optitrack_x"]
+# used_columns = ["est_pitch_rate", "pitch", "est_vx",]
+# used_columns = ["est_pitch_rate", "pitch"]
+# value_to_conjugate = "pitch"
+
+# used_columns = ["est_yaw_rate", "yaw"]
+# value_to_conjugate = "yaw"
+
+used_colors = ["cyan", "red", "blue", "green"]
+
+amplitudes = {}
+real_vals = {}
+imag_vals = {}
+A_vals = {}
+for column in used_columns:
+    amplitudes[column] = np.array([[]])
+    real_vals[column] = np.array([[]])
+    imag_vals[column] = np.array([[]])
+    A_vals[column] = np.array([])
+
+y_vals = np.array([])
+y_real_vals = np.array([])
+y_imag_vals = np.array([])
+
+fig = plt.figure()
+
+# =========== Main Idea ===========
+# The idea is to get the FFT transform of different windows of data
+# We remove the noise by only using low frequencies
+# We also use the real and imaginary part instead of amplitude (especially when averaging)
+# as the average of amplitude DOES NOT EQUAL the amplitude of the average
+# However, it is possible to use the amplitude if we don't average and we use the least square
+# over all data segments.
+# I believe that using all data is better than averaging as different experiments have different
+# amplitudes which might make the average worse.
+# I also believe that using the amplitude might be better than using real and imaginary parts
+# especially when having the closed loop dynamics as the closed loop dynamics might induce some delays
+# which affects tha phase (but should not affect the amplitude). This means that real and imaginary
+# parts will be affected
+# 
+
+columns_to_calc = ["est_vx", "est_vy", "est_vz", "est_roll_rate", "est_pitch_rate", "est_yaw_rate"]
+columns_to_use_for_calc = ["Optitrack_x", "Optitrack_y", "Optitrack_z", "roll", "pitch", "yaw"]
+
+for file_num, data_file_name in enumerate(data_file_names):
+    df = pd.read_csv(data_file_dir + data_file_name, header=None)
+    np_arr = df.to_numpy()
+    windows_to_read = files_windows_to_read[file_num]
+
+    for iter, column in enumerate(columns_to_calc):
+        column_to_use = columns_to_use_for_calc[iter]
+        idx_calc = columns_ids[column]
+        idx_use = columns_ids[column_to_use]
+        np_arr[1, idx_calc] = 0
+        num_raws = np_arr.shape[0]
+        data_freq=50
+        for i in range(1,num_raws-3):
+            np_arr[i+1, idx_calc] = (float(np_arr[i+2, idx_use])-float(np_arr[i, idx_use]))*data_freq/2
+    # test_arr = np_arr[1700:2200, :]
+    for window in windows_to_read:
+        window_start = window[0]
+        window_end = window[1]
+        window_size = window_end-window_start
+        freqs = np.fft.fftfreq(window_size)*max_freq
+
+        # low_freqs = [freq for freq in freqs if freq<Num_last_freq_to_use and freq>=0]
+        
+        for iter, column in enumerate(used_columns):
+            idx = columns_ids[column]
+            data = np.array([float(x) for x in np_arr[window_start:window_end, idx]])
+            # Apply window to avoid high frequencies effect from big jumps at the edges
+            data_with_win = apply_window(data, 3)
+
+            fft_res = np.fft.fft(data_with_win)/len(data_with_win)
+
+            amps = np.abs(fft_res)
+
+            # The fft of the low frequencies only (Just the wanted range)
+            A_vals[column] = np.append(A_vals[column] , fft_res[Num_freq_to_skip:Num_last_freq_to_use])
+
+            if amplitudes[column].size == 0:
+                amplitudes[column] = np.array([amps])
+            else:
+                amplitudes[column] = np.vstack([amplitudes[column], amps])
+
+            if "rate" in column:
+                # Theta_dot_dot[s] = s*theta_dot[s]   (Derivative)
+                # s = j*w = j*2*pi*f
+                y_vals = np.append(y_vals, np.array(fft_res[Num_freq_to_skip:Num_last_freq_to_use]*freqs[Num_freq_to_skip:Num_last_freq_to_use])*2*np.pi*complex(0,1))
+
+            # plt.plot(freqs, amps[Num_freq_to_skip:window_size//2])
+            plt.plot(freqs[Num_freq_to_skip:window_size//2], amps[Num_freq_to_skip:window_size//2], color=used_colors[iter])
+            plt.show()
+    # fig = plt.figure()
+
+    # data = np_arr[]
+
+avg_amplitudes = {}
+for iter, column in enumerate(used_columns):
+    avg_amplitudes[column] = np.average(amplitudes[column], axis=0)
+    plt.plot(freqs[Num_freq_to_skip:window_size//2], avg_amplitudes[column][Num_freq_to_skip:window_size//2], color=used_colors[iter], linestyle='dashed')
+    plt.show()
+
+
+# =========================== Amplitude ===========================
+# Calculate constants using the average over all windows
+
+# Roll and y
+value_to_conjugate = used_columns[0]
+# value_to_divide_by = used_columns[0]
+conj = np.conjugate(A_vals[value_to_conjugate])
+if len(used_columns)==2:
+    
+    A_mat_T = np.array([
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+        ])
+elif len(used_columns)==3:
+    A_mat_T = np.array([
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[2]])), np.imag(np.multiply(conj, A_vals[used_columns[2]]))), # vel
+        # np.append(np.real(np.multiply(conj, A_vals[used_columns[3]])), np.imag(np.multiply(conj, A_vals[used_columns[3]]))), # pos
+        ])
+elif len(used_columns)==4:
+    A_mat_T = np.array([
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[2]])), np.imag(np.multiply(conj, A_vals[used_columns[2]]))), # vel
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[3]])), np.imag(np.multiply(conj, A_vals[used_columns[3]]))), # pos
+        ])
+
+y = np.array(np.append(np.real(np.multiply(conj, y_vals)), np.imag(np.multiply(conj, y_vals))))
+
+A_mat = A_mat_T.transpose()
+
+AT_A = np.matmul(A_mat_T, A_mat)
+AT_A_1 = np.linalg.inv(AT_A)
+
+consts_from_conj_1 = np.matmul(AT_A_1, np.matmul(A_mat_T, y))
+
+
+
+
+
+value_to_conjugate = used_columns[1]
+conj = np.conjugate(A_vals[value_to_conjugate])
+# if "yaw" in used_columns:
+#     A_mat_T = np.array([
+#         np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+#         np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+#         # np.append(np.real(np.multiply(conj, A_vals[used_columns[2]])), np.imag(np.multiply(conj, A_vals[used_columns[2]]))), # vel
+#         # np.append(np.real(np.multiply(conj, A_vals[used_columns[3]])), np.imag(np.multiply(conj, A_vals[used_columns[3]]))), # pos
+#         ])
+# else:
+#     A_mat_T = np.array([
+#         np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+#         np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+#         # np.append(np.real(np.multiply(conj, A_vals[used_columns[2]])), np.imag(np.multiply(conj, A_vals[used_columns[2]]))), # vel
+#         # np.append(np.real(np.multiply(conj, A_vals[used_columns[3]])), np.imag(np.multiply(conj, A_vals[used_columns[3]]))), # pos
+#         ])
+
+if len(used_columns)==2:
+    
+    A_mat_T = np.array([
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+        ])
+elif len(used_columns)==3:
+    A_mat_T = np.array([
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[2]])), np.imag(np.multiply(conj, A_vals[used_columns[2]]))), # vel
+        # np.append(np.real(np.multiply(conj, A_vals[used_columns[3]])), np.imag(np.multiply(conj, A_vals[used_columns[3]]))), # pos
+        ])
+elif len(used_columns)==4:
+    A_mat_T = np.array([
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[2]])), np.imag(np.multiply(conj, A_vals[used_columns[2]]))), # vel
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[3]])), np.imag(np.multiply(conj, A_vals[used_columns[3]]))), # pos
+        ])
+
+
+y = np.array(np.append(np.real(np.multiply(conj, y_vals)), np.imag(np.multiply(conj, y_vals))))
+
+A_mat = A_mat_T.transpose()
+
+AT_A = np.matmul(A_mat_T, A_mat)
+AT_A_1 = np.linalg.inv(AT_A)
+
+consts_from_conj_2 = np.matmul(AT_A_1, np.matmul(A_mat_T, y))
+
+std_errors = calculate_uncertainty(A_mat, y, consts_from_conj_2)
+
+conj = np.array([1 for i in range(len(A_vals[value_to_conjugate]))])
+# if "yaw" in used_columns:
+#     A_mat_T = np.array([
+#         np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+#         np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+#         # np.append(np.real(np.multiply(conj, A_vals[used_columns[2]])), np.imag(np.multiply(conj, A_vals[used_columns[2]]))), # vel
+#         # np.append(np.real(np.multiply(conj, A_vals[used_columns[3]])), np.imag(np.multiply(conj, A_vals[used_columns[3]]))), # pos
+#         ])
+# else:
+#     A_mat_T = np.array([
+#         np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+#         np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+#         # np.append(np.real(np.multiply(conj, A_vals[used_columns[2]])), np.imag(np.multiply(conj, A_vals[used_columns[2]]))), # vel
+#         # np.append(np.real(np.multiply(conj, A_vals[used_columns[3]])), np.imag(np.multiply(conj, A_vals[used_columns[3]]))), # pos
+#         ])
+
+if len(used_columns)==2:
+    
+    A_mat_T = np.array([
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+        ])
+elif len(used_columns)==3:
+    A_mat_T = np.array([
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[2]])), np.imag(np.multiply(conj, A_vals[used_columns[2]]))), # vel
+        # np.append(np.real(np.multiply(conj, A_vals[used_columns[3]])), np.imag(np.multiply(conj, A_vals[used_columns[3]]))), # pos
+        ])
+elif len(used_columns)==4:
+    A_mat_T = np.array([
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[0]])), np.imag(np.multiply(conj, A_vals[used_columns[0]]))), # angular rate
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[1]])), np.imag(np.multiply(conj, A_vals[used_columns[1]]))), # angle
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[2]])), np.imag(np.multiply(conj, A_vals[used_columns[2]]))), # vel
+        np.append(np.real(np.multiply(conj, A_vals[used_columns[3]])), np.imag(np.multiply(conj, A_vals[used_columns[3]]))), # pos
+        ])
+
+
+y = np.array(np.append(np.real(np.multiply(conj, y_vals)), np.imag(np.multiply(conj, y_vals))))
+
+A_mat = A_mat_T.transpose()
+
+AT_A = np.matmul(A_mat_T, A_mat)
+AT_A_1 = np.linalg.inv(AT_A)
+
+consts_from_conj_3 = np.matmul(AT_A_1, np.matmul(A_mat_T, y))
+
+
+
+fig = plt.figure()
+x_axis = [i for i in range(len(y))]
+y_fitted = np.matmul(A_mat, consts_from_conj_2)
+plt.plot(x_axis, y, color="red")
+plt.plot(x_axis, y_fitted, color="blue", linestyle='dashed')
+
+# Pitch and x
+# A_mat_T = np.array([np.append(avg_reals["est_pitch_rate"], avg_imags["est_pitch_rate"]), np.append(avg_reals["pitch"], avg_imags["pitch"]), np.append(avg_reals["est_vx"], avg_imags["est_vx"])])
+# y = np.array(np.append(-2*np.pi*avg_imags["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use], 2*np.pi*avg_reals["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use]))
+
+
+# # =========================== Real and Imaginary (avg) ===========================
+# # Calculate constants using the average over all windows
+
+# # Roll and y
+# A_mat_T_avg = np.array([np.append(avg_reals["est_roll_rate"], avg_imags["est_roll_rate"]), np.append(avg_reals["roll"], avg_imags["roll"]), np.append(avg_reals["est_vy"], avg_imags["est_vy"]), np.append(avg_reals["Optitrack_y"], avg_imags["Optitrack_y"])])
+# y = np.array(np.append(-2*np.pi*avg_imags["est_roll_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use], 2*np.pi*avg_reals["est_roll_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use]))
+
+# # Pitch and x
+# # A_mat_T = np.array([np.append(avg_reals["est_pitch_rate"], avg_imags["est_pitch_rate"]), np.append(avg_reals["pitch"], avg_imags["pitch"]), np.append(avg_reals["est_vx"], avg_imags["est_vx"])])
+# # y = np.array(np.append(-2*np.pi*avg_imags["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use], 2*np.pi*avg_reals["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use]))
+
+# A_mat_avg = A_mat_T_avg.transpose()
+
+# AT_A = np.matmul(A_mat_T_avg, A_mat_avg)
+# AT_A_1 = np.linalg.inv(AT_A)
+
+# consts_from_avg = np.matmul(AT_A_1, np.matmul(A_mat_T_avg, y))
+
+
+# # =========================== Real and Imaginary (all) ===========================
+# # Calculate constants using the values from all windows
+
+# # Roll and y
+# A_mat_T_all = np.array([np.append(real_vals["est_roll_rate"], imag_vals["est_roll_rate"]), np.append(real_vals["roll"], imag_vals["roll"]), np.append(real_vals["est_vy"], imag_vals["est_vy"]), np.append(real_vals["Optitrack_y"], imag_vals["Optitrack_y"])])
+# y = np.array(np.append(-2*np.pi*imag_vals["est_roll_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use], 2*np.pi*real_vals["est_roll_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use]))
+
+# # Pitch and x
+# # A_mat_T = np.array([np.append(real_vals["est_pitch_rate"], imag_vals["est_pitch_rate"]), np.append(real_vals["pitch"], imag_vals["pitch"]), np.append(real_vals["est_vx"], imag_vals["est_vx"])])
+# # y = np.array(np.append(-2*np.pi*imag_vals["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use], 2*np.pi*real_vals["est_pitch_rate"]*freqs[Num_freq_to_skip:Num_last_freq_to_use]))
+
+# A_mat_all = A_mat_T_all.transpose()
+
+# AT_A = np.matmul(A_mat_T_all, A_mat_all)
+# AT_A_1 = np.linalg.inv(AT_A)
+# consts_from_all = np.matmul(AT_A_1, np.matmul(A_mat_T_all, y))
+
+# print("Consts from amplitude: ", consts_from_amplitude)
+# print("Consts from R/I avg: ", consts_from_avg)
+print("Dynamics parameter for:",  used_columns)
+print("Consts from R/I all using rate as conj: ", consts_from_conj_1)
+print("Consts from R/I all using angle as conj: ", consts_from_conj_2)
+print("Uncertainty: ", std_errors)
+print("Consts no conj: ", consts_from_conj_3)
+print("done")

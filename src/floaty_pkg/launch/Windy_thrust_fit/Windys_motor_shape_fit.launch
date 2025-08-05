@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<launch>
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+	<rosparam file="$(find floaty_pkg)/config/online_learning_algorithm_config.yaml"/>
+
+	<!-- Node that runs a service to play audio files --> 
+	<node name="play_audio_node" pkg="floaty_pkg" type="play_audio_node.py" 
+					required="true" output="screen"/>
+
+	<!-- Node that runs a service to control the iterative learning process --> 
+	<group ns="iterative_learning">
+		<node name="iterative_speed_update_node" pkg="floaty_pkg" type="iterative_speed_update_node.py" 
+					required="true" output="screen"/>
+	</group>
+
+	<group ns="maestro_control">
+		<node name="maestro_node" pkg="floaty_pkg" type="maestro_node" 
+						required="true" output="screen"/>
+	</group>
+
+
+	<!-- Reading the ATI sensor data via ROS -->
+	<include file="$(find netft_rdt_driver)/launch/ft_sensor.launch">
+	</include>
+
+
+	<!-- Include the recording nodes -->
+	<include file="$(find floaty_pkg)/launch/single_task_launch/recorder.launch">
+	</include>
+
+
+	<!-- Node that read Optitrack data and publishs it over ROS --> 
+	<group ns="NatNet">
+		<node name="NatNet_node" pkg="floaty_pkg" type="NatNet_node" 
+						required="true" output="screen"/>
+	</group>
+
+
+</launch>

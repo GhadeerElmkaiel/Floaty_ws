@@ -1,0 +1,7 @@
+maestro_control: {
+  number_of_motors: 6,
+  ramp_speed_divisions: 10,
+  ramp_time: 0.8,
+  windy_stop_speed: 4000,
+  windy_motor_speed: 6000,
+}

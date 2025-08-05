@@ -1,0 +1,4 @@
+int32 num_of_points # The number of points per swep
+float32[] speeds # a list of motors' initial speeds 
+---
+int32 ok # 1 if the request recieved and processed

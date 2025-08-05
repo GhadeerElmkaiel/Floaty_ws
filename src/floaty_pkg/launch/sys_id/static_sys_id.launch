@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<launch>
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+
+	<!-- <arg  name="base_frame"	 default="map" doc=""/> -->
+	<!-- <arg  name="loadcell_frame"	 default="loadcell" doc=""/> -->
+	<!-- <arg  name="loadcell_mocap_topic"	 default="/vrpn_client_node/ATISensor/pose" doc=""/> -->
+	<!-- <arg  name="mocap_server" default="192.168.2.2" doc=""/> -->
+
+	<!-- Data recording parameter -->
+	<arg  name="data_to_record" default="100" doc=""/>
+	<arg  name="pth_to_radio_script" default="$(find floaty_pkg)/scripts/move_floaty_flaps_script.py" doc=""/>
+	<arg  name="data_file_path" default="$(find floaty_pkg)/data/static_system_identification/current_experiment/" doc="The path to save the recorded data"/>
+	<arg  name="record_duration" default="0.005" doc="The time to wait between two samples from the loadcell"/>
+	
+	<!-- Maestro control parapeters -->
+	<arg  name="number_of_windy_motors" default="7" doc="The number of motors in Windy (The windtunnle ;P)"/>
+	<arg  name="windy_motor_speed" default="6300" doc="The speed of the motors in windy"/>
+	<arg  name="windy_stop_speed" default="4000" doc="The speed of the motors in windy when stopped"/>
+	<arg  name="ramp_speed_divisions" default="10" doc="The number of intermideate speeds until reaching target speed"/>
+	<arg  name="ramp_time" default="1" doc="The time in second until reaching target speed"/>
+
+	<!-- System Identification parameters -->
+	<arg  name="flaps_range" default="120" doc="The range of the flaps in angle"/>
+
+	<!-- <arg  name="min_angle" default="-30" doc="The minimum motor angle value to test"/>
+	<arg  name="max_angle" default="30" doc="The maximum motor angle value to test"/>
+	<arg  name="angle_resolution" default="5" doc="The difference between two consecutive angles"/>
+	<arg  name="motors_to_move_id" default='[1, 0, 0, 0]' doc="The motors to move during the experiment"/>
+	<arg  name="motors_to_move_direction" default='[1, 0, 0, 0]' doc="Defines how to move the motors and how they change with each others"/> -->
+
+
+
+	<!-- Broadcasting the tf transform between the loadcell and the base frame -->
+	<!-- <include file="$(find floaty_pkg)/launch/frame_to_frame_tf.launch">
+		<arg  name="base_frame"	 default="$(arg base_frame)"/>
+		<arg  name="trans_frame"	 default="$(arg loadcell_frame)"/>
+		<arg  name="transform_topic"	 default="$(arg loadcell_mocap_topic)"/>
+	</include> -->
+
+
+	<!-- Node that runs a service to record the loadcell data --> 
+	<group ns="ATI_recorder">
+		<param name="data_topic" type="str" value="/ft_sensor/netft_data"/>
+		<!-- <param name="mocap_topic" type="str" value="$(arg loadcell_mocap_topic)"/> -->
+		<param name="data_file_path" type="str" value="$(find floaty_pkg)/$(arg data_file_path)"/>
+		<!-- <param name="data_to_record" type="int" value="$(arg data_to_record)"/> -->
+		<param name="record_duration" type="double" value="$(arg record_duration)"/>
+
+		<node name="ATI_recorder_node" pkg="floaty_pkg" type="ATI_recorder_node" 
+					 required="true" output="screen"/>
+	</group>
+
+	<!-- Node that runs a service to control Windy's maestro motors --> 
+	<group ns="maestro_control">
+		<param name="number_of_motors" type="int" value="$(arg number_of_windy_motors)"/>
+		<param name="ramp_speed_divisions" type="int" value="$(arg ramp_speed_divisions)"/>
+		<param name="ramp_time" type="double" value="$(arg ramp_time)"/>
+
+		<node name="maestro_node" pkg="floaty_pkg" type="maestro_node" 
+					 required="true" output="screen"/>
+	</group>
+
+	<!-- Node that runs the radio services --> 
+	<!-- <group ns="cf_radio">
+		<param name="flaps_range" type="double" value="$(arg flaps_range)"/>
+		
+		<node name="crazyradio_node" pkg="floaty_pkg" type="crazyradio_node.py" 
+					 required="true" output="screen"/>
+	</group> -->
+
+	<!-- Node that runs the loop for all calculations --> 
+	<group ns="static_sys_id">
+		<param name="pth_to_radio_script" type="str" value="$(arg pth_to_radio_script)"/>
+		<param name="windy_motor_speed" type="int" value="$(arg windy_motor_speed)"/>
+		<param name="windy_stop_speed" type="int" value="$(arg windy_stop_speed)"/>
+
+		<node name="static_system_identification_node" pkg="floaty_pkg" type="static_system_identification_node.py" 
+					 required="true" output="screen"/>
+	</group>
+
+
+	<!-- Reading the ATI sensor data via ROS -->
+	<include file="$(find netft_rdt_driver)/launch/ft_sensor.launch">
+		<!-- <arg  name="frame_id"	 default="$(arg loadcell_frame)"/> -->
+	</include>
+
+
+
+	<!-- Run VRPN for receiving mocap data -->
+	<!-- <include file="$(find vrpn_client_ros)/launch/sample.launch">
+		<arg  name="server"	 default="$(arg mocap_server)"/>
+	</include> -->
+
+	<!-- <node type="rviz" name="rviz" pkg="rviz" args="-d $(find floaty_pkg)/rviz/rviz_config.rviz" /> -->
+
+
+</launch>

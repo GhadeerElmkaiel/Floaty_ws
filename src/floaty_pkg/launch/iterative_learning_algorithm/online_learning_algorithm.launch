@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<launch>
+
+	<rosparam file="$(find floaty_pkg)/config/all_config.yaml"/>
+	<rosparam file="$(find floaty_pkg)/config/online_learning_algorithm_config.yaml"/>
+	
+	<!-- <arg  name="ATI_rate"	 default="1000" doc="The rate with which the ATI sensor is publishing the data"/>
+	<arg  name="loadcell_frame"	 default="sensor" doc=""/> -->
+
+
+	<!-- Broadcasting the tf transform between the loadcell and the base frame -->
+	<group ns="frame_to_frame_tf">
+		<node name="tf_transform_node" pkg="floaty_pkg" type="tf_transform_node" 
+					 required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that runs a service to record the loadcell data --> 
+	<group ns="data_recorder">
+		<node name="data_recorder_node" pkg="floaty_pkg" type="data_recorder_node" 
+					 required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that runs a service to control Windy's maestro motors --> 
+	<group ns="maestro_control">
+		<node name="maestro_node" pkg="floaty_pkg" type="maestro_node" 
+					 required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that runs a service to update the motors speeds to uniform the airflow --> 
+	<group ns="gp_process">
+		<node name="calculate_gp_node" pkg="floaty_pkg" type="calculate_gp_node.py" 
+					 required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that runs a service to control the iterative learning process --> 
+	<group ns="iterative_learning">
+		<node name="iterative_speed_update_node" pkg="floaty_pkg" type="iterative_speed_update_node.py" 
+					required="true" output="screen"/>
+	</group>
+
+
+	<!-- Reading the ATI sensor data via ROS -->
+	<include file="$(find netft_rdt_driver)/launch/ft_sensor.launch">
+	</include>
+
+
+	<!-- Node that runs a service to create plots --> 
+	<node name="plot_airflow_from_ATI_data_node" pkg="floaty_pkg" type="plot_airflow_from_ATI_data_node.py" 
+					required="true" output="screen"/>
+
+	<!-- Node that read Optitrack data and publishs it over ROS --> 
+	<group ns="NatNet">
+		<node name="NatNet_node" pkg="floaty_pkg" type="NatNet_node" 
+						required="true" output="screen"/>
+	</group>
+
+
+	<!-- Node that runs a service to play audio files --> 
+	<node name="play_audio_node" pkg="floaty_pkg" type="play_audio_node.py" 
+					required="true" output="screen"/>
+
+
+	<!-- Node that runs a service to control the iterative learning process --> 
+	<!-- <group ns="calc_motor_speeds">
+		<node name="calc_motor_speeds_node" pkg="floaty_pkg" type="calc_motor_speeds_node.py" 
+					required="true" output="screen"/>
+	</group> -->
+
+
+	<node type="rviz" name="rviz" pkg="rviz" args="-d $(find floaty_pkg)/rviz/rviz_config.rviz" />
+
+
+</launch>
