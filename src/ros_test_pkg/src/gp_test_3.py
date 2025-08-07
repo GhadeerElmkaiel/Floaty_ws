@@ -263,7 +263,7 @@ def gp_service():
 
     # plt.show()
 
-    file = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Hao_step_0.7_radius_0.2_step_0.8/iterative_learning_data_num_4.csv"
+    file = "/home/floaty/Floaty/ws/src/floaty_pkg/data/Hao_step_0.7_radius_0.2_step_0.8/iterative_learning_data_num_4.csv"
     request = Request(file)
     update_speed_callback(request)
     print("done")

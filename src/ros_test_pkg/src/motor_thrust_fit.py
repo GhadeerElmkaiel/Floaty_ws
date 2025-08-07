@@ -8,7 +8,7 @@ from itertools import product
 # -------------------------------------------------------------------
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/lower_motor_thrust.csv", header=None)
+data = pd.read_csv("/home/floaty/Floaty/ws/src/ros_test_pkg/src/data/lower_motor_thrust.csv", header=None)
 
 # X = np.array(data.iloc[:,[0,1]])
 data = -1*np.array(data.iloc[:,2])
@@ -52,7 +52,7 @@ axs[0].legend(labels)
 # -------------------------------------------------------------------
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/higher_motor_thrust.csv", header=None)
+data = pd.read_csv("/home/floaty/Floaty/ws/src/ros_test_pkg/src/data/higher_motor_thrust.csv", header=None)
 
 # X = np.array(data.iloc[:,[0,1]])
 data = -1*np.array(data.iloc[:,2])
@@ -88,7 +88,7 @@ axs[1].legend(labels)
 
 
 import tikzplotlib
-tikzplotlib.save("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/test.tex")
+tikzplotlib.save("/home/floaty/Floaty/ws/src/ros_test_pkg/src/test.tex")
 
 plt.show()
 print("done")

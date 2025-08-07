@@ -148,7 +148,7 @@ def calc_speed_update(prediction, mesh, motors_speeds, ax=None):
     # ax.set_zlabel("force error (N)")
 
     import tikzplotlib
-    tikzplotlib.save("/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/uniform_0.6_radius_0.2/uniform_4.tex")
+    tikzplotlib.save("/home/floaty/Floaty/ws/src/floaty_pkg/data/uniform_0.6_radius_0.2/uniform_4.tex")
 
     plt.show()
 
@@ -253,7 +253,7 @@ def gp_service():
 
     # plt.show()
 
-    file = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/test_onno_2/iterative_learning_data_num_7.csv"
+    file = "/home/floaty/Floaty/ws/src/floaty_pkg/data/test_onno_2/iterative_learning_data_num_7.csv"
     request = Request(file)
     update_speed_callback(request)
     print("done")

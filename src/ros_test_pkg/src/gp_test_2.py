@@ -79,7 +79,7 @@ class GPR:
 # function_vals = np.arctan(range_x)
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/recordings_all_motors_6000_fixed.csv", header=None)
+data = pd.read_csv("/home/floaty/Floaty/ws/src/ros_test_pkg/src/data/recordings_all_motors_6000_fixed.csv", header=None)
 
 X = np.array(data.iloc[:,[0,1]])
 y = -1*np.array(data.iloc[:,2])
@@ -121,7 +121,7 @@ plt.show()
 # -------------------------------------------------------------------
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/recordings_upper_motor_5000.csv", header=None)
+data = pd.read_csv("/home/floaty/Floaty/ws/src/ros_test_pkg/src/data/recordings_upper_motor_5000.csv", header=None)
 
 X = np.array(data.iloc[:,[0,1]])
 y = -1*np.array(data.iloc[:,2])
@@ -158,7 +158,7 @@ plt.show()
 # -------------------------------------------------------------------
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/recordings_bottom_motor_5000.csv", header=None)
+data = pd.read_csv("/home/floaty/Floaty/ws/src/ros_test_pkg/src/data/recordings_bottom_motor_5000.csv", header=None)
 
 X = np.array(data.iloc[:,[0,1]])
 y = -1*np.array(data.iloc[:,2])

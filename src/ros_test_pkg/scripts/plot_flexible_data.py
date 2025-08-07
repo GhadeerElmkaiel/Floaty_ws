@@ -5,7 +5,7 @@ import tikzplotlib
 
 # Read the CSV file into a Pandas DataFrame
 
-data_file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/' 
+data_file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/' 
 data_file_base_name = "floaty_data"
 
 with open(data_file_path+"iteration_num.txt", 'r+') as file:
@@ -13,45 +13,45 @@ with open(data_file_path+"iteration_num.txt", 'r+') as file:
     value = int(file.read())
     
 file_path = data_file_path + data_file_base_name + "_" + str(value) + ".csv"
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/floaty_data_1650.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/good_data/Good_video_1.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/New_setup/floaty_v3_good_flight_2.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Z/Exp_1_Z_HAng_22_5.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Y/Exp_2_Y_25s_HAng_22_5.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/Square/Exp_3_Yaw_square_Slow_motion_25s_q_01_HAng_22_5.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/Exp_1_Yaw_35s_q_015_HAng_22_5.csv'     # 0.15 Hz Yaw sine wave
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/Exp_2_Yaw_20s_q_010_HAng_22_5.csv'     # 0.10 Hz Yaw sine wave
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/Exp_3_Yaw_20s_q_005_HAng_22_5.csv'     # 0.05 Hz Yaw sine wave
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/Exp_4_Yaw_20s_q_002_HAng_22_5.csv'     # 0.02 Hz Yaw sine wave
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/Hover_35s_Z_115_HAng_22_5.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Robustness_airflow_fan/exp_1_2_3.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Robustness_airflow_fan/exp_5.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/Science_Robotics_data/floaty_v4_ctrl_1_sys_id_1.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/Science_Robotics_data/floaty_v4_ctrl_2_sys_id_1.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/floaty_data_1650.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/good_data/Good_video_1.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/New_setup/floaty_v3_good_flight_2.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Z/Exp_1_Z_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Y/Exp_2_Y_25s_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/Square/Exp_3_Yaw_square_Slow_motion_25s_q_01_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/Exp_1_Yaw_35s_q_015_HAng_22_5.csv'     # 0.15 Hz Yaw sine wave
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/Exp_2_Yaw_20s_q_010_HAng_22_5.csv'     # 0.10 Hz Yaw sine wave
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/Exp_3_Yaw_20s_q_005_HAng_22_5.csv'     # 0.05 Hz Yaw sine wave
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/Exp_4_Yaw_20s_q_002_HAng_22_5.csv'     # 0.02 Hz Yaw sine wave
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/Hover_35s_Z_115_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Robustness_airflow_fan/exp_1_2_3.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Robustness_airflow_fan/exp_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/Science_Robotics_data/floaty_v4_ctrl_1_sys_id_1.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/Science_Robotics_data/floaty_v4_ctrl_2_sys_id_1.csv' 
 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/V4/ctrl_1_test_3.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/V4/floaty_v4_ctrl_2_sys_id_1.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/V4/ctrl_1_test_3.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/V4/floaty_v4_ctrl_2_sys_id_1.csv' 
 ## ===== Science robotics review =====
 # ============= Y =============
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Y/Exp_2_Y_35s_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Y/Exp_2_Y_35s_HAng_22_5.csv' 
 
 # ============= Z =============
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Z/Exp_4_Z_70s_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Z/Exp_4_Z_70s_HAng_22_5.csv' 
 
 # ============= Yaw-0.15 =============
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.15_Hz/Exp_4_Yaw_60s_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.15_Hz/Exp_4_Yaw_60s_HAng_22_5.csv' 
 
 # ============= Yaw-0.10 =============
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.10_Hz/Exp_4_Yaw_60s_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.10_Hz/Exp_4_Yaw_60s_HAng_22_5.csv' 
 
 # ============= Yaw-0.05 =============
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.05_Hz/Exp_5_Yaw_60s_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.05_Hz/Exp_5_Yaw_60s_HAng_22_5.csv' 
 
 # ============= Yaw-0.02 =============
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.02_Hz/Exp_1_Yaw_60s_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.02_Hz/Exp_1_Yaw_60s_HAng_22_5.csv' 
 
 # ============= Yaw-square =============
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/step/Exp_1_Yaw_HAng_22_5.csv' 
+# file_path = '/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/step/Exp_1_Yaw_HAng_22_5.csv' 
 
 
 
@@ -259,7 +259,7 @@ plt.show()
 # plt.ylabel('Values')
 
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/"
 # plt.savefig(path_to_figs+'Box_plots_compined.pdf', format='pdf')
 
 # plt.show()
@@ -312,7 +312,7 @@ plt.show()
 # plt.title("Floaty's position")
 # plt.grid(True)
 # plt.legend()
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/"
 
 # plt.savefig(path_to_figs+'hover_position.pdf', format='pdf')
 
@@ -337,7 +337,7 @@ plt.show()
 # plt.legend()
 # plt.ylim((-0.15,0.15))
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/"
 
 # plt.savefig(path_to_figs+'hover_position_error.pdf', format='pdf')
 
@@ -431,7 +431,7 @@ plt.show()
 # plt.legend(loc='lower right', fontsize = legend_font_size)
 
 # plt.grid(True)
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Y/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Y/"
 # plt.savefig(path_to_figs+'y.pdf', format='pdf')
 # plt.show()
 
@@ -445,11 +445,11 @@ plt.show()
 # plt.yticks(fontsize = ticks_font_size)
 # plt.ylim((-45, 45))
 # plt.grid(True)
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Y/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Y/"
 # plt.savefig(path_to_figs+'y_input.pdf', format='pdf')
 # plt.show()
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Y/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Y/"
 
 
 # # exp 1
@@ -533,7 +533,7 @@ plt.show()
 
 # plt.grid(True)
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Z/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Z/"
 # plt.savefig(path_to_figs+'z.pdf', format='pdf')
 # plt.show()
 # tikzplotlib.save("z_tracking.tex")
@@ -548,13 +548,13 @@ plt.show()
 # plt.yticks(fontsize = ticks_font_size)
 # plt.grid(True)
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Z/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Z/"
 # plt.savefig(path_to_figs+'z_input.pdf', format='pdf')
 # plt.show()
 # tikzplotlib.save("z_input.tex")
 
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Z/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Z/"
 
 
 # # exp 1
@@ -645,7 +645,7 @@ plt.show()
 # plt.legend(fontsize = legend_font_size, loc='lower right')
 
 # plt.grid(True)
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
 # plt.savefig(path_to_figs+'yaw_square.pdf', format='pdf')
 
 # plt.show()
@@ -668,7 +668,7 @@ plt.show()
 
 # plt.grid(True)
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
 # plt.savefig(path_to_figs+'yaw_square_input.pdf', format='pdf')
 # plt.show()
 # # tikzplotlib.save("yaw_angle_input.tex")
@@ -694,7 +694,7 @@ plt.show()
 
 # plt.grid(True)
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
 # plt.savefig(path_to_figs+'yaw_15.pdf', format='pdf')
 # plt.show()
 # tikzplotlib.save("yaw_angle_tracking.tex")
@@ -711,13 +711,13 @@ plt.show()
 
 # plt.grid(True)
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
 # plt.savefig(path_to_figs+'yaw_15_input.pdf', format='pdf')
 
 # plt.show()
 
 # # ==================== Extra Experiments ====================
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.15_Hz/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.15_Hz/"
 
 # # exp 1
 # start_data = 1740
@@ -809,7 +809,7 @@ plt.show()
 
 # plt.grid(True)
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
 # plt.savefig(path_to_figs+'yaw_10.pdf', format='pdf')
 # plt.show()
 # tikzplotlib.save("yaw_angle_tracking.tex")
@@ -826,12 +826,12 @@ plt.show()
 
 # plt.grid(True)
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
 # plt.savefig(path_to_figs+'yaw_10_input.pdf', format='pdf')
 # plt.show()
 
 # # ==================== Extra Experiments ====================
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.10_Hz/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.10_Hz/"
 
 # # exp 1
 # start_data = 847
@@ -921,7 +921,7 @@ plt.show()
 
 # plt.grid(True)
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
 # # plt.savefig(path_to_figs+'yaw_05.pdf', format='pdf')
 # plt.savefig(path_to_figs+'yaw_02.pdf', format='pdf')
 # plt.show()
@@ -939,14 +939,14 @@ plt.show()
 
 # plt.grid(True)
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Yaw/"
 # # plt.savefig(path_to_figs+'yaw_05_input.pdf', format='pdf')
 # plt.savefig(path_to_figs+'yaw_02_input.pdf', format='pdf')
 
 # plt.show()
 
 # # ==================== Extra Experiments 0.05-Hz ====================
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.05_Hz/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.05_Hz/"
 
 # # exp 1
 # start_data = 896
@@ -1015,7 +1015,7 @@ plt.show()
 
 
 # # ==================== Extra Experiments 0.02-Hz ====================
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.02_Hz/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/0.02_Hz/"
 
 # # exp 1
 # start_data = 1000
@@ -1100,7 +1100,7 @@ plt.show()
 
 # # -------------------  Yaw tracking square  -------------------
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/step/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/step/"
 
 # # exp 1
 # start_data = 1606
@@ -1160,7 +1160,7 @@ plt.show()
 
 # # -------------------  Robustness side fan  -------------------
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Robustness_airflow_fan/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Robustness_airflow_fan/"
 
 # # exp 5
 # start_data = 2525
@@ -1324,7 +1324,7 @@ plt.show()
 
 # plt.colorbar(lc, ax=ax, shrink=0.5, aspect=10)
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/"
 # plt.savefig(path_to_figs+'3d_plot_with_projections.pdf', format='pdf')
 
 # # Show the plot
@@ -1374,7 +1374,7 @@ plt.show()
 # # Adjust layout to avoid overlap
 # plt.tight_layout()
 
-# path_to_figs = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/"
+# path_to_figs = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/Hover/"
 # plt.savefig(path_to_figs+'hover_projections.pdf', format='pdf')
 
 # # Show plot

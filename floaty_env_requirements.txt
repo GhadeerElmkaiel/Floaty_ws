@@ -28,6 +28,7 @@ numpy==1.24.4
 opencv-python-headless==4.5.5.64
 opt-einsum==3.3.0
 packaging==23.0
+pandas==2.0.0
 pillow==9.4.0
 pyparsing==3.0.9
 pyqt5==5.15.7

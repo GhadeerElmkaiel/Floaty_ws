@@ -49,7 +49,7 @@ import matplotlib.pyplot as plt
 # plt.show()
 
 # l = input("enter:")
-# pth = os.path.abspath("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/recordings_1.csv")
+# pth = os.path.abspath("/home/floaty/Floaty/ws/src/ros_test_pkg/src/recordings_1.csv")
 # print(pth)
 
 
@@ -98,7 +98,7 @@ plt.show()
 
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/recordings_test_6000.csv", header=None)
+data = pd.read_csv("/home/floaty/Floaty/ws/src/ros_test_pkg/src/data/recordings_test_6000.csv", header=None)
 print(data.head)
 
 X = np.array(data.iloc[:,[0,1]])

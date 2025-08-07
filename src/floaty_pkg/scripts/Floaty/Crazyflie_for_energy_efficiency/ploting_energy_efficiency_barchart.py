@@ -147,7 +147,7 @@ ax.grid(True, axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 
 # --- Save the figure ---
-pdf_filename = "/home/gelmkaiel/Floaty/Nature Machine Intelligence/Figures/specific_power_barchart.pdf"
+pdf_filename = "/home/floaty/Floaty/Nature Machine Intelligence/Figures/specific_power_barchart.pdf"
 plt.savefig(pdf_filename, format='pdf', dpi=300)
 print(f"Figure saved as {pdf_filename}")
 

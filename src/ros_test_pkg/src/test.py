@@ -37,8 +37,8 @@ def get_closest_points(X, Y):
 gap = 0.04
 radius = 0.37
 
-# pth_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/52_48_43_40_50_45.csv"
-pth_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/47-Gaussian/iterative_learning_data_num_0.csv"
+# pth_to_data = "/home/floaty/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/52_48_43_40_50_45.csv"
+pth_to_data = "/home/floaty/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/47-Gaussian/iterative_learning_data_num_0.csv"
 
 s = "{:02d}".format(1)
 print(s)

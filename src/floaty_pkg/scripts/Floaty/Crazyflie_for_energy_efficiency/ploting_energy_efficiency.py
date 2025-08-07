@@ -127,7 +127,7 @@
 
 
 # # --- Save the figure as a PDF ---
-# pdf_filename = "/home/gelmkaiel/Floaty/Nature Machine Intelligence/Figures/power_vs_mass_comparison.pdf"
+# pdf_filename = "/home/floaty/Floaty/Nature Machine Intelligence/Figures/power_vs_mass_comparison.pdf"
 # plt.savefig(pdf_filename, format='pdf', bbox_inches='tight', dpi=300)
 # print(f"Figure saved as {pdf_filename}")
 
@@ -290,7 +290,7 @@
 # plt.tight_layout(rect=[0, 0, 0.85, 1]) # Adjust if legend is outside, or remove rect if inside
 
 # # --- Save the figure as a PDF ---
-# pdf_filename = "/home/gelmkaiel/Floaty/Nature Machine Intelligence/Figures/power_vs_mass_comparison_with_dji_shaded.pdf" # Updated filename
+# pdf_filename = "/home/floaty/Floaty/Nature Machine Intelligence/Figures/power_vs_mass_comparison_with_dji_shaded.pdf" # Updated filename
 # plt.savefig(pdf_filename, format='pdf', bbox_inches='tight', dpi=300)
 # print(f"Figure saved as {pdf_filename}")
 
@@ -459,7 +459,7 @@ ax.grid(True, which="major", ls="-", alpha=0.4, color='lightgray', zorder=0, lin
 ax.grid(True, which="minor", ls=":", alpha=0.2, color='lightgray', zorder=0, linewidth=0.5)
 
 plt.tight_layout()
-pdf_filename = "/home/gelmkaiel/Floaty/Nature Machine Intelligence/Figures/power_vs_mass_small_figure_dji_markers.pdf" # Updated filename
+pdf_filename = "/home/floaty/Floaty/Nature Machine Intelligence/Figures/power_vs_mass_small_figure_dji_markers.pdf" # Updated filename
 plt.savefig(pdf_filename, format='pdf', bbox_inches='tight', dpi=300)
 print(f"Figure saved as {pdf_filename}")
 plt.show()

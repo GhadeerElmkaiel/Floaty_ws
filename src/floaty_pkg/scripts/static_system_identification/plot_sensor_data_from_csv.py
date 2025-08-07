@@ -88,7 +88,7 @@ for folder_dir in folders_dir:
     folders = folder_dir.split("/")
     folder_name = folders[-1]
     # folder_name = "2"
-    # folder_dir = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/scripts/static_system_identification/../../data/static_system_identification/2'
+    # folder_dir = '/home/floaty/Floaty/ws/src/floaty_pkg/scripts/static_system_identification/../../data/static_system_identification/2'
     files = [f for f in os.listdir(folder_dir) if os.path.isfile(os.path.join(folder_dir, f))]
     if "1" in folder_name:
         motor=1

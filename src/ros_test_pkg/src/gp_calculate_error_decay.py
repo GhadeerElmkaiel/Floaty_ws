@@ -149,9 +149,9 @@ def gp_service():
     for i in range(iter_num):
         print(i)
         
-        # file = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/dilshad_uniform_0.7_radius_0.2_step_0.8/iterative_learning_data_num_"+str(i)+".csv"
-        # file = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/dilshad_atan_0.7_radius_0.2_step_0.8/iterative_learning_data_num_"+str(i)+".csv"
-        file = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Hao_linear_0.7_radius_0.2_step_0.8/iterative_learning_data_num_"+str(i)+".csv"
+        # file = "/home/floaty/Floaty/ws/src/floaty_pkg/data/dilshad_uniform_0.7_radius_0.2_step_0.8/iterative_learning_data_num_"+str(i)+".csv"
+        # file = "/home/floaty/Floaty/ws/src/floaty_pkg/data/dilshad_atan_0.7_radius_0.2_step_0.8/iterative_learning_data_num_"+str(i)+".csv"
+        file = "/home/floaty/Floaty/ws/src/floaty_pkg/data/Hao_linear_0.7_radius_0.2_step_0.8/iterative_learning_data_num_"+str(i)+".csv"
         request = Request(file)
         err_array.append(calc_error_callback(request))
     # err_array = [6.646/313, 5.116/313, 2.117/313, 2.84/313, 0.8925/313, 1.6899/313, 0.912/313]

@@ -70,7 +70,7 @@ def record_ati_data(file_name, num_of_points):
 
 
 def collect_and_fit_callback(req):
-    path_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/upper/"
+    path_to_data = "/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/upper/"
     update_speeds_srv_name = "/maestro_control/ramp_motors_service"
     rospy.wait_for_service(update_speeds_srv_name)
     ATI_srv_name = "/ATI_recorder/collect_data_service"

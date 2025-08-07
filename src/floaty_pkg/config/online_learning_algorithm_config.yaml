@@ -11,9 +11,9 @@ gp_process: {
   kernel_l: 0.09, # Best value for Gaussian is 0.09 while best value for Exp is 0.075
   kernel_function: "Gaussian",
   save_data_to_json: True,
-  # pth_to_json: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/json/",
+  # pth_to_json: "/home/floaty/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/json/",
   # json_file_name: "iter_0.json",
-  pth_to_json: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/iter_0.json",
+  pth_to_json: "/home/floaty/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/iter_0.json",
   data_to_use: "uniform", # "uniform", # can be either "uniform", "random", or "all"  ("all")
   num_of_data_to_use: 150, # Only used when the using random data
   uniform_mesh_radius: 0.3,     # Only used when the using uniform data
@@ -24,5 +24,5 @@ iterative_learning: {
   max_number_of_iterations: 9,
   update_rate_decay: 0.9, # Or alpha. It is used as following original_update_rate/(1+alpha*i)
   exp_num_file: "exp_num.txt",
-  pth_to_data: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/",
+  pth_to_data: "/home/floaty/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/",
 }

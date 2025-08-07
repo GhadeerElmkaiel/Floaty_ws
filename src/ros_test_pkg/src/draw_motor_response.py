@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-df = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/motors_accuracy.csv")
+df = pd.read_csv("/home/floaty/Floaty/ws/src/ros_test_pkg/src/motors_accuracy.csv")
 np_arr = df.to_numpy()
 np_arr[:,0] = (np_arr[:,0]-4000)*15/500
 

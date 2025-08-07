@@ -112,7 +112,7 @@ def update_speed_callback(pth_to_data):
 
 
     # mesh2 = calc_circle_mesh(0.5, 0.05, [-0.47, -0.27])    # motor 3
-    # pth = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_3.csv"
+    # pth = "/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_3.csv"
     # data2 = pd.read_csv(pth)
     
     # X = np.array(data2.iloc[:,[0,1]])
@@ -157,9 +157,9 @@ def gp_service():
     # mesh = calc_circle_mesh(radius, gap, [-0.48, 0.26])     # motor 5
     # mesh = calc_circle_mesh(radius, gap, [-0.47, -0.27])    # motor 3
 
-    pth = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/iterative_learning_data_num_0.csv"
-    # pth = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_5.csv"
-    # pth = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_3.csv"
+    pth = "/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/iterative_learning_data_num_0.csv"
+    # pth = "/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_5.csv"
+    # pth = "/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_3.csv"
     update_speed_callback(pth)
 
 

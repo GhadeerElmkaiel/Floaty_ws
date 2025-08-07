@@ -35,7 +35,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from utils.quaternions import quaternion_conjugate, quaternion_difference, quaternion_multiply, quaternion_to_euler, euler_to_quaternion
 
 
-path_to_csv = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/estimation_data.csv"
+path_to_csv = "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/estimation_data.csv"
 
 uri = uri_helper.uri_from_env(default='radio://0/80/2M/E7E7E7E7E7')
 

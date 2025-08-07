@@ -72,30 +72,30 @@ vrpn_recorder: {
   record_duration: 0.0025,
   vrpn_rate: 60,
   use_data_directly: True,  # This means that the recording happens immediately when it recieves the topic and not by timer
-  # data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/dynamic_system_identification/current_experiment/",
+  # data_file_path: "/home/floaty/Floaty/ws/src/floaty_pkg/data/dynamic_system_identification/current_experiment/",
 }
 
 topic_recorder: {
   data_topic: "/Optitrack/Floaty",
   record_duration: 0.0025,
   use_data_directly: True,  # This means that the recording happens immediately when it recieves the topic and not by timer
-  # data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/dynamic_system_identification/current_experiment/",
+  # data_file_path: "/home/floaty/Floaty/ws/src/floaty_pkg/data/dynamic_system_identification/current_experiment/",
 }
 
 ATI_recorder: {
-  data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/static_system_identification/current_experiment/",
+  data_file_path: "/home/floaty/Floaty/ws/src/floaty_pkg/data/static_system_identification/current_experiment/",
 }
 
 # Record symultanuously ATI + Optitrack data
 data_recorder: {
   record_period: 0.02,
-  # data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/",
+  # data_file_path: "/home/floaty/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/",
   use_median_value_for_ATI: True,
   num_of_values_to_use_for_ATI: 5,
 }
 
 # Record symultanuously ATI + Optitrack data
 floaty_info_recorder: {
-  data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/",
+  data_file_path: "/home/floaty/Floaty/ws/src/floaty_pkg/data/floaty_estimator/",
   data_file_base_name: "floaty_data",
 }

@@ -7,7 +7,7 @@ import pandas as pd
 # -------------------------------------------------------------------
 
 
-pth_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/lower"
+pth_to_data = "/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/lower"
 
 
 # X = np.array(data.iloc[:,[0,1]])
@@ -50,7 +50,7 @@ axs[0].legend(labels)
 # -------------------------------------------------------------------
 # -------------------------------------------------------------------
 
-pth_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/upper"
+pth_to_data = "/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/upper"
 
 
 
@@ -83,7 +83,7 @@ axs[1].legend(labels)
 # -------------------------------------------------------------------
 # -------------------------------------------------------------------
 
-pth_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/center"
+pth_to_data = "/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/center"
 
 
 
@@ -122,4 +122,4 @@ print("done")
 
 
 import tikzplotlib
-tikzplotlib.save("/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/fit_poly.tex")
+tikzplotlib.save("/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/fit_poly.tex")

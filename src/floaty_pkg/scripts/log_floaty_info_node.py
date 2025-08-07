@@ -159,7 +159,7 @@ if __name__ == '__main__':
     rospy.init_node("log_floaty_info_node")
     floaty_info_publish_topic_name = "/crazyradio/" + rospy.get_param("/crazyradio/floaty_info_publish_topic_name", "floaty_info")
     floaty_flexible_info_publish_topic_name = "/crazyradio/" + rospy.get_param("/crazyradio/floaty_flexible_info_publish_topic_name", "flexible_floaty_info")
-    data_file_path = rospy.get_param("/floaty_info_recorder/data_file_path", "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/floaty_estimator/")
+    data_file_path = rospy.get_param("/floaty_info_recorder/data_file_path", "/home/floaty/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/floaty_estimator/")
     data_file_base_name = rospy.get_param("/floaty_info_recorder/data_file_base_name", "floaty_data")    
     flexible_msg_data_title = rospy.get_param("/crazyradio/flexible_msg_data_title")
 

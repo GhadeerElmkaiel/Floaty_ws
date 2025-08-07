@@ -4,26 +4,26 @@ vrpn_recorder: {
   record_duration: 0.0025,
   vrpn_rate: 60,
   use_data_directly: True,  # This means that the recording happens immediately when it recieves the topic and not by timer
-  data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/dynamic_system_identification/current_experiment/",
+  data_file_path: "/home/floaty/Floaty/ws/src/floaty_pkg/data/dynamic_system_identification/current_experiment/",
 }
 
 topic_recorder: {
   data_topic: "/Optitrack/Floaty",
   record_duration: 0.0025,
   use_data_directly: True,  # This means that the recording happens immediately when it recieves the topic and not by timer
-  data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/dynamic_system_identification/current_experiment/",
+  data_file_path: "/home/floaty/Floaty/ws/src/floaty_pkg/data/dynamic_system_identification/current_experiment/",
 }
 
 ATI_recorder: {
   data_topic: "/ft_sensor/netft_data",
-  data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/",
+  data_file_path: "/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/",
 }
 
 online_learning_recorder: {
   ATI_topic: "/ft_sensor/netft_data",
   data_to_record: 500,
   record_period: 0.02,
-  data_file_path: "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/",
+  data_file_path: "/home/floaty/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/",
   use_median_value_for_ATI: True,
   num_of_values_to_use_for_ATI: 5,
 }
