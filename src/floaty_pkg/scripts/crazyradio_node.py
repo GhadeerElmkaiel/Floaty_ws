@@ -223,7 +223,7 @@ goal_x = 0.0
 goal_y = -0.0
 # goal_z = 0.8
 goal_z = 1.12
-goal_z = 1.2
+# goal_z = 1.2
 
 max_goal_targeting_rad = 0.1
 min_goal_targeting_rad = 0.05
