@@ -4,6 +4,13 @@ import matplotlib.pyplot as plt
 from scipy import ndimage
 from floaty_msgs.srv import speed_update_srv, speed_update_srvResponse
 import math
+import os
+
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
 
 class SquaredExponentialKernel:
     def __init__(self, sigma_f: float = 1, length: float = 1):
@@ -263,7 +270,7 @@ def gp_service():
 
     # plt.show()
 
-    file = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Hao_step_0.7_radius_0.2_step_0.8/iterative_learning_data_num_4.csv"
+    file = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Hao_step_0.7_radius_0.2_step_0.8/iterative_learning_data_num_4.csv"
     request = Request(file)
     update_speed_callback(request)
     print("done")

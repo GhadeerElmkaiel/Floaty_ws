@@ -1,10 +1,17 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
 
 # Read the CSV file into a Pandas DataFrame
 
-data_file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/' 
+data_file_path = f'/home/{username}/Floaty/ws/src/floaty_pkg/data/floaty_estimator/' 
 data_file_base_name = "floaty_data"
 
 with open(data_file_path+"iteration_num.txt", 'r+') as file:
@@ -12,9 +19,9 @@ with open(data_file_path+"iteration_num.txt", 'r+') as file:
     value = int(file.read())
     
 file_path = data_file_path + data_file_base_name + "_" + str(value) + ".csv"
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/floaty_data_1280.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/good_data/Good_video_1.csv' 
-# file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/New_setup/floaty_v3_good_flight_2.csv' 
+# file_path = f'/home/{username}/Floaty/ws/src/floaty_pkg/data/floaty_estimator/floaty_data_1280.csv' 
+# file_path = f'/home/{username}/Floaty/ws/src/floaty_pkg/data/floaty_estimator/good_data/Good_video_1.csv' 
+# file_path = f'/home/{username}/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Sys_Id_flying/New_setup/floaty_v3_good_flight_2.csv' 
 
 
 data = pd.read_csv(file_path)

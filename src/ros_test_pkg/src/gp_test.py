@@ -7,6 +7,13 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF
 import matplotlib.pyplot as plt
 
+
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
+
 # import matplotlib.pyplot as plt
 # from sklearn.gaussian_process import GaussianProcessRegressor
 # from sklearn.gaussian_process.kernels import RBF
@@ -49,7 +56,7 @@ import matplotlib.pyplot as plt
 # plt.show()
 
 # l = input("enter:")
-# pth = os.path.abspath("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/recordings_1.csv")
+# pth = os.path.abspath(f"/home/{username}/Floaty/ws/src/ros_test_pkg/src/recordings_1.csv")
 # print(pth)
 
 
@@ -98,7 +105,7 @@ plt.show()
 
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/recordings_test_6000.csv", header=None)
+data = pd.read_csv(f"/home/{username}/Floaty/ws/src/ros_test_pkg/src/data/recordings_test_6000.csv", header=None)
 print(data.head)
 
 X = np.array(data.iloc[:,[0,1]])

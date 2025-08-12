@@ -34,8 +34,14 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from utils.quaternions import quaternion_conjugate, quaternion_difference, quaternion_multiply, quaternion_to_euler, euler_to_quaternion
 
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
 
-path_to_csv = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/estimation_data.csv"
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
+
+
+path_to_csv = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/floaty_estimator/estimation_data.csv"
 
 uri = uri_helper.uri_from_env(default='radio://0/80/2M/E7E7E7E7E7')
 

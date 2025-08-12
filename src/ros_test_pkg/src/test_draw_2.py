@@ -4,7 +4,13 @@ import matplotlib.pyplot as plt
 from scipy import ndimage
 from floaty_msgs.srv import speed_update_srv, speed_update_srvResponse
 import math
+import os
 
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
 
 mesh = []
 
@@ -112,7 +118,7 @@ def update_speed_callback(pth_to_data):
 
 
     # mesh2 = calc_circle_mesh(0.5, 0.05, [-0.47, -0.27])    # motor 3
-    # pth = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_3.csv"
+    # pth = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_3.csv"
     # data2 = pd.read_csv(pth)
     
     # X = np.array(data2.iloc[:,[0,1]])
@@ -157,9 +163,9 @@ def gp_service():
     # mesh = calc_circle_mesh(radius, gap, [-0.48, 0.26])     # motor 5
     # mesh = calc_circle_mesh(radius, gap, [-0.47, -0.27])    # motor 3
 
-    pth = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/iterative_learning_data_num_0.csv"
-    # pth = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_5.csv"
-    # pth = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_3.csv"
+    pth = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/iterative_learning_data_num_0.csv"
+    # pth = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_5.csv"
+    # pth = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_3.csv"
     update_speed_callback(pth)
 
 

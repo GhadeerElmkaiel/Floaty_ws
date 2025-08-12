@@ -2,13 +2,32 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from itertools import product
+import os
 
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
+
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
 
 # -------------------------------------------------------------------
 # -------------------------------------------------------------------
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/lower_motor_thrust.csv", header=None)
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
+
+
+data = pd.read_csv(f"/home/{username}/Floaty/ws/src/ros_test_pkg/src/data/lower_motor_thrust.csv", header=None)
 
 # X = np.array(data.iloc[:,[0,1]])
 data = -1*np.array(data.iloc[:,2])
@@ -52,7 +71,7 @@ axs[0].legend(labels)
 # -------------------------------------------------------------------
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/higher_motor_thrust.csv", header=None)
+data = pd.read_csv(f"/home/{username}/Floaty/ws/src/ros_test_pkg/src/data/higher_motor_thrust.csv", header=None)
 
 # X = np.array(data.iloc[:,[0,1]])
 data = -1*np.array(data.iloc[:,2])
@@ -88,7 +107,7 @@ axs[1].legend(labels)
 
 
 import tikzplotlib
-tikzplotlib.save("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/test.tex")
+tikzplotlib.save(f"/home/{username}/Floaty/ws/src/ros_test_pkg/src/test.tex")
 
 plt.show()
 print("done")

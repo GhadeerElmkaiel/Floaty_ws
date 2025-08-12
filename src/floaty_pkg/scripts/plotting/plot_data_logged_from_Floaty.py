@@ -1,8 +1,15 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
+
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
 
 # Read the CSV file into a Pandas DataFrame
-file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/floaty_data_63.csv' 
+file_path = f'/home/{username}/Floaty/ws/src/floaty_pkg/data/floaty_estimator/floaty_data_63.csv' 
 data = pd.read_csv(file_path)
 
 # Extract the 'Opt_roll' column data

@@ -3,7 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.spatial.transform import Rotation as R
+import os
 
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
 
 
 kst_range = 123
@@ -11,7 +17,7 @@ emax_range = 105
 dpwoer_range = 113
 
 signal_range = dpwoer_range
-df = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/Motors_response_tests/KST/angles_test_2.csv")
+df = pd.read_csv(f"/home/{username}/Floaty/ws/src/ros_test_pkg/src/Motors_response_tests/KST/angles_test_2.csv")
 np_arr = df.to_numpy()
 np_arr[:,0] = (np_arr[:,0]-4000)*signal_range/4000
 

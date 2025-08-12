@@ -5,7 +5,13 @@ from floaty_msgs.srv import maestro_srv, maestro_srvRequest
 from floaty_msgs.srv import int_srv, motor_thrust_measure_srv
 from netft_rdt_driver.srv import String_cmd, String_cmdRequest
 from time import sleep
+import os
 
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
 
 def remove_ati_bias():
     srv_name = "/ft_sensor/bias_cmd"
@@ -70,7 +76,7 @@ def record_ati_data(file_name, num_of_points):
 
 
 def collect_and_fit_callback(req):
-    path_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/upper/"
+    path_to_data = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/upper/"
     update_speeds_srv_name = "/maestro_control/ramp_motors_service"
     rospy.wait_for_service(update_speeds_srv_name)
     ATI_srv_name = "/ATI_recorder/collect_data_service"

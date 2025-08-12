@@ -17,7 +17,11 @@ importlib-metadata==6.1.0
 importlib-resources==5.12.0
 injector==0.20.1
 jax==0.4.7
+<<<<<<< HEAD
 jax-transformations3d==0.1.0
+=======
+# jax-transformations3d>=0.2.0
+>>>>>>> 2ded216020755d8f03ef3c9044938c77931dc02a
 jaxlib==0.4.7
 jaxtyping==0.2.14
 kiwisolver==1.4.4
@@ -28,6 +32,10 @@ numpy==1.24.4
 opencv-python-headless==4.5.5.64
 opt-einsum==3.3.0
 packaging==23.0
+<<<<<<< HEAD
+=======
+pandas==2.0.0
+>>>>>>> 2ded216020755d8f03ef3c9044938c77931dc02a
 pillow==9.4.0
 pyparsing==3.0.9
 pyqt5==5.15.7

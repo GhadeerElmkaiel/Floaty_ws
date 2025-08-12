@@ -1,13 +1,18 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import os
 
 # -------------------------------------------------------------------
 # -------------------------------------------------------------------
 
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
 
-pth_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/lower"
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
+
+pth_to_data = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/lower"
 
 
 # X = np.array(data.iloc[:,[0,1]])
@@ -50,7 +55,7 @@ axs[0].legend(labels)
 # -------------------------------------------------------------------
 # -------------------------------------------------------------------
 
-pth_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/upper"
+pth_to_data = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/upper"
 
 
 
@@ -83,7 +88,7 @@ axs[1].legend(labels)
 # -------------------------------------------------------------------
 # -------------------------------------------------------------------
 
-pth_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/center"
+pth_to_data = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/center"
 
 
 
@@ -122,4 +127,4 @@ print("done")
 
 
 import tikzplotlib
-tikzplotlib.save("/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/fit_poly.tex")
+tikzplotlib.save(f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/fit_poly.tex")

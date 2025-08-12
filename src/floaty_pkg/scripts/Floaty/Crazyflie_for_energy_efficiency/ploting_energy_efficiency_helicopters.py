@@ -180,7 +180,7 @@
 # ax.grid(True, which="major", ls="-", alpha=0.4, color='lightgray', zorder=0, linewidth=0.8)
 # plt.subplots_adjust(left=0.1, right=0.65, top=0.92, bottom=0.15) # Adjusted right for potentially wider legend items
 
-# pdf_filename = "/home/gelmkaiel/Floaty/Nature Machine Intelligence/Figures/power_vs_mass_consolidated_markers.pdf"
+# pdf_filename = f"/home/{username}/Floaty/Nature Machine Intelligence/Figures/power_vs_mass_consolidated_markers.pdf"
 # plt.savefig(pdf_filename, format='pdf', dpi=300)
 # print(f"Figure saved as {pdf_filename}")
 # plt.show()
@@ -193,6 +193,7 @@ import seaborn as sns
 from matplotlib.ticker import LogLocator, FuncFormatter, NullFormatter
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
+import os
 
 # --- Define common markers ---
 marker_dji_drones = '^'
@@ -359,7 +360,13 @@ ax.grid(True, which="major", ls="-", alpha=0.4, color='lightgray', zorder=0, lin
 # << ADJUST SUBPLOT PARAMETERS FOR WIDE PLOT & LEGEND BELOW >>
 plt.subplots_adjust(left=0.06, right=0.96, top=0.92, bottom=0.25) # Increased bottom margin for legend
 
-pdf_filename = "/home/gelmkaiel/Floaty/Nature Machine Intelligence/Figures/power_vs_mass_kg_wide.pdf"
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
+
+pdf_filename = f"/home/{username}/Floaty/Nature Machine Intelligence/Figures/power_vs_mass_kg_wide.pdf"
 plt.savefig(pdf_filename, format='pdf', dpi=300)
 print(f"Figure saved as {pdf_filename}")
 plt.show()

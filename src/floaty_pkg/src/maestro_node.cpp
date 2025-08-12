@@ -32,7 +32,9 @@ namespace fs = boost::filesystem;
 // #include <libudev.h>
 
 #define MOTOR_STOP_SPEED 4000
-#define MOTOR_MIN_ROT_SPEED 4170
+//#define MOTOR_MIN_ROT_SPEED 4170
+#define MOTOR_MIN_ROT_SPEED 4230
+
 int number_of_motors;
 int fd;
 int fd2;
@@ -50,93 +52,6 @@ int productId = 0x0089;
 
 std::string serialNumber1 = "00384346"; // Serial number for device 1
 std::string serialNumber2 = "00444816"; // Serial number for device 2
-
-// char device1[PATH_MAX];  // Device file for Maestro device 1
-// char device2[PATH_MAX];  // Device file for Maestro device 2
-
-// bool findDeviceBySerial(const char* serialNumber, char* devicePath) {
-//     glob_t globResult;
-//     memset(&globResult, 0, sizeof(globResult));
-
-//     // Search for all /dev/ttyACM* device nodes
-//     if (glob("/dev/ttyACM*", GLOB_NOSORT, NULL, &globResult) == 0) {
-//         std::cout << "Found " << globResult.gl_pathc << " device(s) matching /dev/ttyACM*" << std::endl;
-
-//         for (size_t i = 0; i < globResult.gl_pathc; ++i) {
-//             const char* devPath = globResult.gl_pathv[i];
-//             std::cout << "Checking device: " << devPath << std::endl;
-
-//             // Open device file and read serial number directly (assuming device is accessible)
-//             FILE* serialFile = fopen(devPath, "r");
-//             if (serialFile) {
-//                 char serialBuf[256]; // Adjust buffer size as needed
-//                 if (fgets(serialBuf, sizeof(serialBuf), serialFile) != NULL) {
-//                     // Trim newline characters
-//                     size_t len = strlen(serialBuf);
-//                     if (len > 0 && serialBuf[len - 1] == '\n') {
-//                         serialBuf[len - 1] = '\0';
-//                     }
-
-//                     std::cout << "Read serial number: " << serialBuf << std::endl;
-
-//                     // Match serial number
-//                     if (strcmp(serialBuf, serialNumber) == 0) {
-//                         std::cout << "Match found for serial number: " << serialNumber << std::endl;
-//                         strncpy(devicePath, devPath, PATH_MAX);
-//                         fclose(serialFile);
-//                         globfree(&globResult);
-//                         return true;
-//                     }
-//                 }
-//                 fclose(serialFile);
-//             } else {
-//                 std::cerr << "Failed to open device file: " << devPath << std::endl;
-//             }
-//         }
-//         globfree(&globResult);
-//     } else {
-//         std::cerr << "Failed to glob /dev/ttyACM*" << std::endl;
-//     }
-
-//     std::cerr << "No device found with serial number: " << serialNumber << std::endl;
-//     return false;
-// }
-
-// std::string findTtyACMBySerial(const std::string& serialNumber) {
-//     std::cout << "Searching for serial number: " << serialNumber << std::endl;
-
-//     std::string ttyACMPath;
-
-//     // Iterate over /sys/class/tty/ directory
-//     for (const auto& entry : fs::directory_iterator("/sys/class/tty/")) {
-//         std::string devName = entry.path().filename().string();
-//         std::cout << "Checking device: " << devName << std::endl;
-
-//         if (devName.substr(0, 6) == "ttyACM") {
-//             std::cout << "Found ttyACM device: " << devName << std::endl;
-
-//             // Read serial number from sysfs entry
-//             std::ifstream serialFile(entry.path().string() + "/device/serial");
-//             if (serialFile) {
-//                 std::string devSerial;
-//                 serialFile >> devSerial;
-//                 std::cout << "Read serial number: " << devSerial << " for device: " << devName << std::endl;
-
-//                 if (devSerial == serialNumber) {
-//                     ttyACMPath = "/dev/" + devName;
-//                     std::cout << "Match found! ttyACMPath: " << ttyACMPath << std::endl;
-//                     break;
-//                 }
-//             }
-//         }
-//     }
-
-//     if (ttyACMPath.empty()) {
-//         std::cout << "No matching device found for serial number: " << serialNumber << std::endl;
-//     }
-
-//     return ttyACMPath;
-// }
 
 // Sets the target of a Maestro channel.
 // See the "Serial Servo Commands" section of the user's guide.
@@ -178,62 +93,6 @@ int maestroSetTarget(unsigned char channel, unsigned short target)
 
 void initMaestro()
 {
-  // // Two devices
-  // libusb_device_handle* deviceHandle1 = openMaestroDevice(0x1ffb, 0x0089, serialNumber1);
-  // if (!deviceHandle1)
-  // {
-  //     std::cerr << "Error opening Maestro device 1" << std::endl;
-  //     return;
-  // }
-
-  // libusb_device_handle* deviceHandle2 = openMaestroDevice(0x1ffb, 0x0089, serialNumber2);
-  // if (!deviceHandle2)
-  // {
-  //     std::cerr << "Error opening Maestro device 2" << std::endl;
-  //     return;
-  // }
-
-  // for(int i=0; i<6; i++){
-  //   sendMaestroCommand(deviceHandle1, i, MOTOR_STOP_SPEED);
-  // }
-
-  // sendMaestroCommand(deviceHandle2, 0, MOTOR_STOP_SPEED);
-
-
-  // ROS_INFO("Maestro ready");
-
-    // if (findDeviceBySerial(serialNumber1, device1)) {
-    //     std::cout << "Found Maestro device 1 at: " << device1 << std::endl;
-    //     // Open device file for Maestro device 1
-    //     int fd = open(device1, O_RDWR | O_NOCTTY);
-    //     if (fd == -1) {
-    //         std::cerr << "Failed to open Maestro device 1" << std::endl;
-    //         return;
-    //     }
-    //     // Configure serial port settings for fd1 (similar to your existing code)
-    //     // ...
-    // } else {
-    //     std::cerr << "Maestro device 1 not found" << std::endl;
-    //     return;
-    // }
-
-    // if (findDeviceBySerial(serialNumber2, device2)) {
-    //     std::cout << "Found Maestro device 2 at: " << device2 << std::endl;
-    //     // Open device file for Maestro device 2
-    //     int fd2 = open(device2, O_RDWR | O_NOCTTY);
-    //     if (fd2 == -1) {
-    //         std::cerr << "Failed to open Maestro device 2" << std::endl;
-    //         return;
-    //     }
-    //     // Configure serial port settings for fd2 (similar to your existing code)
-    //     // ...
-    // } else {
-    //     std::cerr << "Maestro device 2 not found" << std::endl;
-    //     return;
-    // }
-
-    // Use fd1 and fd2 to communicate with the Maestro devices
-    // ...
 
   const char * device = "/dev/ttyACM0";
   // const char * device = "/dev/ttyACM1";

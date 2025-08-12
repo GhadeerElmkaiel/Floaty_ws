@@ -2,6 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 import pandas as pd
+import os
+
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
 
 def calc_circle_mesh(radius, mesh_size):
     mesh = []
@@ -37,8 +44,8 @@ def get_closest_points(X, Y):
 gap = 0.04
 radius = 0.37
 
-# pth_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/52_48_43_40_50_45.csv"
-pth_to_data = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/47-Gaussian/iterative_learning_data_num_0.csv"
+# pth_to_data = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/52_48_43_40_50_45.csv"
+pth_to_data = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/iterative_learning_algorithm/47-Gaussian/iterative_learning_data_num_0.csv"
 
 s = "{:02d}".format(1)
 print(s)

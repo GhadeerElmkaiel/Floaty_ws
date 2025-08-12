@@ -4,7 +4,14 @@ import matplotlib.pyplot as plt
 from scipy import ndimage
 from floaty_msgs.srv import speed_update_srv, speed_update_srvResponse
 import math
+import os
 
+
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
 
 mesh = []
 
@@ -85,7 +92,7 @@ def update_speed_callback():
     kernal_l=0.2
     cov_function=SquaredExponentialKernel(length=kernal_l)
 
-    pth = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_5.csv"
+    pth = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_5.csv"
     
     mesh_center = [-0.48/2, 0.26/2]         # here I divide by two because the position measurments where scaled by two
     mesh = calc_circle_mesh(radius, gap, mesh_center)     # motor 5
@@ -131,7 +138,7 @@ def update_speed_callback():
 
     # mesh2_center = [-0.47/2, -0.27/2]           # here I divide by two because the position measurments where scaled by two
     # mesh2 = calc_circle_mesh(radius, gap, mesh2_center)    # motor 3
-    # pth = "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_3.csv"
+    # pth = f"/home/{username}/Floaty/ws/src/floaty_pkg/data/Windys_motors_fit/airflow_shape_motor_3.csv"
     # data2 = pd.read_csv(pth)
     
     # X = np.array(data2.iloc[:,[0,1]])/2         # here I divide by two because the position measurments where scaled by two

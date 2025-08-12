@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from matplotlib.container import BarContainer # Import BarContainer directly
+import os
 
 # --- (Keep the rest of your data and setup code the same) ---
 
@@ -146,8 +147,15 @@ ax.legend(handles=legend_handles, labels=legend_labels, fontsize=10, loc='upper 
 ax.grid(True, axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 
+
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
+
 # --- Save the figure ---
-pdf_filename = "/home/gelmkaiel/Floaty/Nature Machine Intelligence/Figures/specific_power_barchart.pdf"
+pdf_filename = f"/home/{username}/Floaty/Nature Machine Intelligence/Figures/specific_power_barchart.pdf"
 plt.savefig(pdf_filename, format='pdf', dpi=300)
 print(f"Figure saved as {pdf_filename}")
 

@@ -3,7 +3,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from itertools import product
 from scipy import ndimage
+import os
 
+# Get the home directory of the current user
+home_directory = os.path.expanduser('~')
+
+# Get the username from the home directory path
+username = os.path.basename(home_directory)
 class SquaredExponentialKernel:
     def __init__(self, sigma_f: float = 1, length: float = 1):
         self.sigma_f = sigma_f
@@ -79,7 +85,7 @@ class GPR:
 # function_vals = np.arctan(range_x)
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/recordings_all_motors_6000_fixed.csv", header=None)
+data = pd.read_csv(f"/home/{username}/Floaty/ws/src/ros_test_pkg/src/data/recordings_all_motors_6000_fixed.csv", header=None)
 
 X = np.array(data.iloc[:,[0,1]])
 y = -1*np.array(data.iloc[:,2])
@@ -121,7 +127,7 @@ plt.show()
 # -------------------------------------------------------------------
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/recordings_upper_motor_5000.csv", header=None)
+data = pd.read_csv(f"/home/{username}/Floaty/ws/src/ros_test_pkg/src/data/recordings_upper_motor_5000.csv", header=None)
 
 X = np.array(data.iloc[:,[0,1]])
 y = -1*np.array(data.iloc[:,2])
@@ -158,7 +164,7 @@ plt.show()
 # -------------------------------------------------------------------
 
 
-data = pd.read_csv("/home/gelmkaiel/Floaty/ws/src/ros_test_pkg/src/data/recordings_bottom_motor_5000.csv", header=None)
+data = pd.read_csv(f"/home/{username}/Floaty/ws/src/ros_test_pkg/src/data/recordings_bottom_motor_5000.csv", header=None)
 
 X = np.array(data.iloc[:,[0,1]])
 y = -1*np.array(data.iloc[:,2])
