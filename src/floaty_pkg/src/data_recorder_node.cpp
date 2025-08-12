@@ -176,7 +176,7 @@ int main(int argc, char **argv)
 
     nh.param<std::string>("/ft_sensor/pub_topic",data_topic, "netft_data");
     nh.param<std::string>("/NatNet/data_topic",mocap_topic, "/Optitrack/Floaty");
-    // nh.param<std::string>("/data_recorder/data_file_path",data_file_path, "/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/online_learning/current_experiment/");
+    // nh.param<std::string>("/data_recorder/data_file_path",data_file_path, "/home/floaty/Floaty/ws/src/floaty_pkg/data/online_learning/current_experiment/");
 
     data_topic = "/ft_sensor/" + data_topic;
 

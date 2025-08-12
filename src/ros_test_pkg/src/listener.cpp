@@ -28,7 +28,7 @@ void mocapCallback(const geometry_msgs::PoseStamped::ConstPtr& msg)
 
     // Record the time of recieving the data from the Optitrack
     std::fstream fout;
-    fout.open("/home/gelmkaiel/data.txt", std::ios::out | std::ios::app);
+    fout.open("/home/floaty/data.txt", std::ios::out | std::ios::app);
     fout<< "milliseconds: "<<  millisec_since_epoch - start_millisec <<"\n";
 
     fout.close();
