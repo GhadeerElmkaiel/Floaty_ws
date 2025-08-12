@@ -53,6 +53,11 @@ file_path = data_file_path + data_file_base_name + "_" + str(value) + ".csv"
 # ============= Yaw-square =============
 # file_path = '/home/gelmkaiel/Floaty/ws/src/floaty_pkg/data/floaty_estimator/Science_Robotics_Experiments/After_reviews/Yaw/step/Exp_1_Yaw_HAng_22_5.csv' 
 
+## ===== Wind tunnel =====
+file_path = '/home/gelmkaiel/Floaty/Wind_Tunnel_paper/Experiments/Exp_good_4.csv' 
+# file_path = '/home/gelmkaiel/Floaty/Wind_Tunnel_paper/Experiments/Exp_uniform_speed_2.csv' 
+# file_path = '/home/gelmkaiel/Floaty/Wind_Tunnel_paper/Experiments/Exp_uniform_speed_4_53.csv' 
+
 
 
 
